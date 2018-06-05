@@ -18,7 +18,7 @@ import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import IconButton from "@material-ui/core/IconButton";
 import MenuIcon from "@material-ui/icons/Menu";
-import ViewListIcon from "@material-ui/icons/ViewList";
+import ListIcon from "@material-ui/icons/Apps";
 
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
@@ -49,7 +49,7 @@ class Admin extends Component {
     return (
       <div>
         <Grid container>
-          <Grid item xs={3}>
+          <Grid item xs={2}>
             <AppBar position="static">
               <Toolbar>
                 <IconButton color="inherit" aria-label="Menu">
@@ -58,7 +58,7 @@ class Admin extends Component {
               </Toolbar>
             </AppBar>
           </Grid>
-          <Grid item xs={9}>
+          <Grid item xs={10}>
             <AppBar position="static">
               <Toolbar>
                 <Grid container alignItems="center">
@@ -67,7 +67,7 @@ class Admin extends Component {
                   </Grid>
                   <Grid item>
                     <Typography variant="title" color="inherit">
-                      <span>O5 Bezecky klub Furca</span>
+                      <span>O5 Bežecký klub Furča</span>
                     </Typography>
                   </Grid>
                 </Grid>
@@ -77,17 +77,21 @@ class Admin extends Component {
         </Grid>
 
         <Grid container>
-          <Grid item xs={3}>
+          <Grid item xs={2}>
             <div
               style={{ borderRight: "1px solid lightgray", minHeight: "800px" }}
             >
               <List component="nav">
+                <ListItem button>
+                  <ListItemText primary="Select table" />
+                </ListItem>
+                <Divider />
                 {resources.map(resource => (
                   <ListItem button onClick={() => this.setResource(resource)}>
                     <ListItemIcon>
-                      <ViewListIcon />
+                      <ListIcon style={{fontSize: 35}} />
                     </ListItemIcon>
-                    <ListItemText primary={resource} />
+                    <ListItemText primary={resource} className="menu-list-text" />
                   </ListItem>
                 ))}
               </List>
@@ -99,7 +103,7 @@ class Admin extends Component {
               </List>
             </div>
           </Grid>
-          <Grid item xs={9}>
+          <Grid item xs={10}>
             <Grid container justify="center">
               <Grid item xs={11}>
                 <br />

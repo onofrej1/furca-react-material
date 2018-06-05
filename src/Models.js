@@ -6,7 +6,7 @@ const user = {
         {
             name: "roles",
             type: "pivotRelation",
-            resourceTable: "role",
+            resource: "role",
             show: "title",
             label: "Roles"
         }
@@ -23,7 +23,7 @@ const article = {
         {
             name: "tags",
             type: "pivotRelation",
-            resourceTable: "tag",
+            resource: "tag",
             show: "title",
             label: "Tags"
         }
@@ -39,21 +39,21 @@ const menuItem = {
             label: "Menu",
             name: "menu_id",
             type: "relation",
-            resourceTable: "menu",
+            resource: "menu",
             show: "title"
         },
         {
             label: "Page",
             name: "page_id",
             type: "relation",
-            resourceTable: "page",
+            resource: "page",
             show: "title"
         },
         {
             label: "Parent",
             name: "parent_id",
             type: "relation",
-            resourceTable: "menuItem",
+            resource: "menuItem",
             show: "title"
         }
     ],
@@ -76,7 +76,7 @@ const page = {
     title: "Pages",
     form: [
         { label: "Title", name: "title", type: "text" },
-        { type: "editor", label: "Body", name: "body" }
+        { type: "relation", label: "Body", name: "body" }
     ],
     list: [{
         field: "title",
