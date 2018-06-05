@@ -70,7 +70,7 @@ class Crud extends Component {
   render() {
     const data = this.props.data || [];
     const activeResourceName = this.props.activeResourceName;
-    const list = activeResourceName ? Models[activeResourceName].list.map(field => field.field) : [];
+    const list = activeResourceName ? Models[activeResourceName].list : [];
     const form = activeResourceName ? Models[activeResourceName].form : [];
     const {page, rowsPerPage} = this.state;
     let formData = {title: 'aaaa'};
@@ -82,16 +82,15 @@ class Crud extends Component {
         <Grid container>
         <Grid item xs>
         </Grid>
-        <Grid item xs={6}>
-        <Paper>
+        <Grid item xs={this.props.activeRow ? 6 : 10}>
 
-          <Paper class="bg-primary" style={{padding:'10px'}} elevation="8">
-            <h3 style={{margin:0}}>
-            {this.props.activeResourceName}
-            </h3>
-          </Paper>
-
-        <div className="crud-form-wrapper" style={{display: this.props.activeRow ? 'block': 'block'}}>
+        <Paper style={{display: this.props.activeRow ? 'block': 'none'}}>
+        <div class="bg-primary" style={{padding:'10px'}} elevation="8">
+          <h3 style={{margin:0}}>
+          {this.props.activeResourceName}
+          </h3>
+        </div>
+        <div className="crud-form-wrapper">
 
         {this.props.activeRow && <Formik
               enableReinitialize={true}
@@ -104,6 +103,8 @@ class Crud extends Component {
                 values,
                 { setSubmitting, setErrors}
               ) => {
+                this.props.saveResourceData(values);
+                this.props.setActiveRow(null);
                 console.log('data', values);
                 }
               }
@@ -118,7 +119,9 @@ class Crud extends Component {
               }) => (
                 <form onSubmit={handleSubmit}>
                 {form.map(field => {
-                  return <TextField
+                  let Input = null;
+                  if(field.type == 'text') {
+                   Input = <TextField
                     id={field.name}
                     name={field.name}
                     label={field.name}
@@ -126,14 +129,24 @@ class Crud extends Component {
                     onChange={handleChange}
                     onBlur={handleBlur}
                     value={values[field.name]}
-                  />
-                  {touched[field.name] && errors[field.name] && <div>{errors[field.name]}</div>}
-                  <br />
+                  />;
+                }
+
+                  return (
+                    <div>
+                      { Input }
+                      {touched[field.name] && errors[field.name] && <div>{errors[field.name]}</div>}
+                      <br />
+                      </div>
+                    )
                 })}
 
-                <p>
+                <p style={{textAlign:'right'}}>
                   <Button type="submit" variant="contained" color="primary" disabled={isSubmitting}>
-                    Submit
+                    Save
+                  </Button>{' '}
+                  <Button type="button" variant="contained">
+                    Back
                   </Button>
                 </p>
                 </form>
@@ -141,6 +154,7 @@ class Crud extends Component {
             />}
             </div>
             </Paper>
+
         </Grid>
         <Grid item xs>
 
@@ -158,7 +172,7 @@ class Crud extends Component {
             <TableHead>
               <TableRow>
                 {list.map(field => {
-                  return <TableCell>{field}</TableCell>;
+                  return <TableCell>{field.field}</TableCell>;
                 })}
                 <TableCell>Action</TableCell>
               </TableRow>
@@ -168,7 +182,7 @@ class Crud extends Component {
                 return (
                   <TableRow key={row.id}>
                     {list.map(field => {
-                      return <TableCell>{row[field]}</TableCell>
+                      return <TableCell>{'render' in field ? field.render(row) : row[field.field]}</TableCell>
                     })}
                     <TableCell>
                       <Button variant="contained" color="primary" size="small" onClick={() => this.props.setActiveRow(row)}>

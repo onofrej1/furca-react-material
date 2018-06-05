@@ -62,12 +62,12 @@ const menuItem = {
         {
             field: "parent",
             label: "Parent",
-            render: params => params.item.parent && params.item.parent.title
+            render: params => params.parent && params.parent.title
         },
         {
             field: "page",
             label: "Page",
-            render: params => params.item.page && params.item.page.title
+            render: params => params.page && params.page.title
         }
     ]
 };
