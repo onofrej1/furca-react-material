@@ -18,6 +18,7 @@ import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import IconButton from "@material-ui/core/IconButton";
 import MenuIcon from "@material-ui/icons/Menu";
+import ViewListIcon from "@material-ui/icons/ViewList";
 
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
@@ -38,6 +39,7 @@ class Admin extends Component {
   }
 
   setResource(name) {
+    this.props.setActiveRow(null);
     this.props.history.push("/admin/crud/" + name);
   }
 
@@ -83,7 +85,7 @@ class Admin extends Component {
                 {resources.map(resource => (
                   <ListItem button onClick={() => this.setResource(resource)}>
                     <ListItemIcon>
-                      <InboxIcon />
+                      <ViewListIcon />
                     </ListItemIcon>
                     <ListItemText primary={resource} />
                   </ListItem>
