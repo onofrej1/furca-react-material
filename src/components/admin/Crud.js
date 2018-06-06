@@ -37,6 +37,8 @@ import Checkbox from '@material-ui/core/Checkbox';
 
 import Button from "@material-ui/core/Button";
 
+var _ = require('lodash');
+
 class Crud extends Component {
   constructor(props) {
     super(props);
@@ -102,6 +104,13 @@ class Crud extends Component {
     this.setState({ page });
   };
 
+  handleCheckboxChange = (event, values) => {
+    const value = event.target.value;
+    const oldValues = values[event.target.name] || [];
+    values[event.target.name] = event.target.checked ? [...oldValues, value] : oldValues.filter(item => item !== value);
+    this.props.setActiveRow(values);
+  }
+
   handleChangeRowsPerPage = event => {
     this.setState({ rowsPerPage: event.target.value });
   };
@@ -135,6 +144,7 @@ class Crud extends Component {
                       return errors;
                     }}
                     onSubmit={(values, { setSubmitting, setErrors }) => {
+                      console.log(values);
                       this.props.saveResourceData(values);
                       this.props.setActiveRow(null);
                     }}
@@ -150,6 +160,7 @@ class Crud extends Component {
                       <form onSubmit={handleSubmit}>
                         {this.state.formModel.map(field => {
                           let Input = null;
+                          console.log(values);
 
                           //if (field.type == "text") {
                           Input = (
@@ -175,18 +186,24 @@ class Crud extends Component {
                           //}
 
                           if (field.type == "pivotRelation") {
+
                             Input = <FormControl component="fieldset">
                               <FormLabel component="legend">
-                                {field.field}
+                                <span style={{fontSize:'0.7rem'}}>{field.name}</span>
                               </FormLabel>
-                              <FormGroup>
+                              <FormGroup row justify-center>
+
                                 {field.options.map(option => {
-                                  return <FormControlLabel                                    
+                                  const checked = _.indexOf(values[field.name], option.value.toString()) !== -1;
+
+                                  return <FormControlLabel
+                                    className="w-1/3 checkbox-label"
                                     control={
                                       <Checkbox
-                                        checked={false}
-                                        onChange={handleChange}
-                                        value="gilad"
+                                        name={field.name}
+                                        checked={checked}
+                                        onChange={(e) => this.handleCheckboxChange(e, values)}
+                                        value={option.value}
                                       />
                                     }
                                     label={option.text}
@@ -238,9 +255,10 @@ class Crud extends Component {
                   <Button
                     variant="contained"
                     className="btn-white"
+                    size="small"
                     onClick={() => this.props.setActiveRow({})}
                   >
-                    <AddIcon className="mr-1" /> Add new{" "}
+                    <AddIcon className="mr-1 icon-sm" /> Add new{" "}
                     {this.props.activeResourceName}
                   </Button>
                 </p>
@@ -277,17 +295,18 @@ class Crud extends Component {
                                 </TableCell>
                               );
                             })}
-                            <TableCell>
+                            <TableCell  className="whitespace-no-wrap">
                               <Button
                                 variant="contained"
                                 color="primary"
+                                size="small"
                                 onClick={() => this.props.setActiveRow(row)}
                               >
-                                <EditIcon className="mr-1" />
+                                <EditIcon className="mr-1 icon-sm" />
                                 {"  "} Edit
                               </Button>{" "}
-                              <Button variant="contained" color="secondary">
-                                <DeleteIcon className="mr-1" /> Delete
+                              <Button variant="contained" color="secondary" size="small">
+                                <DeleteIcon className="mr-1 icon-sm" /> Delete
                               </Button>
                             </TableCell>
                           </TableRow>
@@ -296,8 +315,9 @@ class Crud extends Component {
                   </TableBody>
                   <TableFooter>
                     <TableRow>
-                      <TableCell className="float-right">
+                      <TableCell className="flex" colspan={3}>
                         <TablePaginator
+                          className="justify-center"
                           count={data.length}
                           rowsPerPage={this.state.rowsPerPage}
                           page={this.state.page}

@@ -17,8 +17,17 @@ body {
   background-color: #3f51b5 !important;
 }
 
+.checkbox-label {
+  margin:0!important;
+  padding: 10px!important;
+}
+
 button {
   border-radius: 0!important;
+}
+
+.icon-sm {
+  font-size: 15px!important;
 }
 
 .menu-list-text {
