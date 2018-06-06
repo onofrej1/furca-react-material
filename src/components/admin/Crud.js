@@ -35,8 +35,8 @@ import FormGroup from "@material-ui/core/FormGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
 import Button from "@material-ui/core/Button";
-
-import { Editor } from "slate-react";
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css'; // ES6
 
 var _ = require("lodash");
 
@@ -231,7 +231,13 @@ class Crud extends Component {
                           }
 
                           if (field.type == "editor") {
-                            
+                            Input = <ReactQuill
+                              name={field.name}
+                              label={field.name}
+                              onChange={handleChange}
+                              onBlur={handleBlur}
+                              value={values[field.name]}
+                            />;
                           }
 
                           return (

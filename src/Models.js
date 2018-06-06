@@ -19,7 +19,7 @@ const article = {
     form: [
         { name: "title", type: "text" },
         { name: "author", type: "text" },
-        { name: "content", type: "textarea" },
+        { name: "content", type: "editor" },
         {
             name: "tags",
             type: "pivotRelation",
