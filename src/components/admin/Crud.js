@@ -29,15 +29,16 @@ import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import DoneIcon from "@material-ui/icons/Done";
 
-import FormLabel from '@material-ui/core/FormLabel';
-import FormControl from '@material-ui/core/FormControl';
-import FormGroup from '@material-ui/core/FormGroup';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
-
+import FormLabel from "@material-ui/core/FormLabel";
+import FormControl from "@material-ui/core/FormControl";
+import FormGroup from "@material-ui/core/FormGroup";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import Checkbox from "@material-ui/core/Checkbox";
 import Button from "@material-ui/core/Button";
 
-var _ = require('lodash');
+import { Editor } from "slate-react";
+
+var _ = require("lodash");
 
 class Crud extends Component {
   constructor(props) {
@@ -107,9 +108,11 @@ class Crud extends Component {
   handleCheckboxChange = (event, values) => {
     const value = event.target.value;
     const oldValues = values[event.target.name] || [];
-    values[event.target.name] = event.target.checked ? [...oldValues, value] : oldValues.filter(item => item !== value);
+    values[event.target.name] = event.target.checked
+      ? [...oldValues, value]
+      : oldValues.filter(item => item !== value);
     this.props.setActiveRow(values);
-  }
+  };
 
   handleChangeRowsPerPage = event => {
     this.setState({ rowsPerPage: event.target.value });
@@ -166,6 +169,7 @@ class Crud extends Component {
                           Input = (
                             <TextField
                               select={field.type == "relation"}
+                              multiline={field.type == "textarea"}
                               name={field.name}
                               label={field.name}
                               fullWidth
@@ -186,31 +190,48 @@ class Crud extends Component {
                           //}
 
                           if (field.type == "pivotRelation") {
+                            Input = (
+                              <FormControl component="fieldset">
+                                <FormLabel component="legend">
+                                  <span style={{ fontSize: "0.7rem" }}>
+                                    {field.name}
+                                  </span>
+                                </FormLabel>
+                                <FormGroup row justify-center>
+                                  {field.options.map(option => {
+                                    const checked =
+                                      _.indexOf(
+                                        values[field.name],
+                                        option.value.toString()
+                                      ) !== -1;
 
-                            Input = <FormControl component="fieldset">
-                              <FormLabel component="legend">
-                                <span style={{fontSize:'0.7rem'}}>{field.name}</span>
-                              </FormLabel>
-                              <FormGroup row justify-center>
-
-                                {field.options.map(option => {
-                                  const checked = _.indexOf(values[field.name], option.value.toString()) !== -1;
-
-                                  return <FormControlLabel
-                                    className="w-1/3 checkbox-label"
-                                    control={
-                                      <Checkbox
-                                        name={field.name}
-                                        checked={checked}
-                                        onChange={(e) => this.handleCheckboxChange(e, values)}
-                                        value={option.value}
+                                    return (
+                                      <FormControlLabel
+                                        className="w-1/3 checkbox-label"
+                                        control={
+                                          <Checkbox
+                                            name={field.name}
+                                            checked={checked}
+                                            onChange={e =>
+                                              this.handleCheckboxChange(
+                                                e,
+                                                values
+                                              )
+                                            }
+                                            value={option.value}
+                                          />
+                                        }
+                                        label={option.text}
                                       />
-                                    }
-                                    label={option.text}
-                                  />
-                                })}
-                              </FormGroup>
-                            </FormControl>;
+                                    );
+                                  })}
+                                </FormGroup>
+                              </FormControl>
+                            );
+                          }
+
+                          if (field.type == "editor") {
+                            
                           }
 
                           return (
@@ -224,7 +245,7 @@ class Crud extends Component {
                           );
                         })}
 
-                        <p class="float-right">
+                        <p className="float-right">
                           <Button
                             type="submit"
                             variant="contained"
@@ -295,7 +316,7 @@ class Crud extends Component {
                                 </TableCell>
                               );
                             })}
-                            <TableCell  className="whitespace-no-wrap">
+                            <TableCell className="whitespace-no-wrap">
                               <Button
                                 variant="contained"
                                 color="primary"
@@ -305,7 +326,11 @@ class Crud extends Component {
                                 <EditIcon className="mr-1 icon-sm" />
                                 {"  "} Edit
                               </Button>{" "}
-                              <Button variant="contained" color="secondary" size="small">
+                              <Button
+                                variant="contained"
+                                color="secondary"
+                                size="small"
+                              >
                                 <DeleteIcon className="mr-1 icon-sm" /> Delete
                               </Button>
                             </TableCell>

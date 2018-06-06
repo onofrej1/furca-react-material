@@ -75,8 +75,8 @@ const menuItem = {
 const page = {
     title: "Pages",
     form: [
-        { label: "Title", name: "title", type: "text" },
-        { type: "relation", label: "Body", name: "body" }
+        { label: "Title", help: "Enter title", name: "title", type: "text" },
+        { type: "editor", label: "Body", name: "body" }
     ],
     list: [{
         field: "title",
