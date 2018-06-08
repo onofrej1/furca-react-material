@@ -35,10 +35,16 @@ import FormGroup from "@material-ui/core/FormGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
 import Button from "@material-ui/core/Button";
-import ReactQuill from 'react-quill';
-import 'react-quill/dist/quill.snow.css'; // ES6
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css"; // ES6
+import RichTextEditor from "react-rte";
+import CKEditor from "./../ckeditor";
+
+import ClassicEditorBuild from "@ckeditor/ckeditor5-build-classic/build/ckeditor";
 
 var _ = require("lodash");
+
+var myHandleChange;
 
 class Crud extends Component {
   constructor(props) {
@@ -52,11 +58,18 @@ class Crud extends Component {
 
     this.setResource = this.setResource.bind(this);
     this.createViewModels = this.createViewModels.bind(this);
+    this.setRow = this.setRow.bind(this);
+    this.initCkeditor = this.initCkeditor.bind(this);
   }
 
   componentDidMount() {
     const { match: { params } } = this.props;
+    this.initCkeditor();
     this.setResource(params.resource);
+  }
+
+  componentDidUpdate() {
+    this.initCkeditor();
   }
 
   componentWillReceiveProps(newProps) {
@@ -71,6 +84,10 @@ class Crud extends Component {
   setResource(resource) {
     this.props.setActiveResourceName(resource);
     this.props.fetchResourceData(resource);
+  }
+
+  setRow(row) {
+    this.props.setActiveRow(row);
   }
 
   createViewModels(resource) {
@@ -118,12 +135,33 @@ class Crud extends Component {
     this.setState({ rowsPerPage: event.target.value });
   };
 
+  initCkeditor() {
+    /*ClassicEditor.create(document.querySelector(".editor"))
+      .then(editor => {
+        console.log(editor);
+        this.editorInstance = editor;
+        const document = this.editorInstance.model.document;
+        console.log("editor", editor);
+        console.log("model", this.editorInstance.model);
+        console.log("document", document);
+        document.on("change", e => {
+          //editor.element.events;
+          console.log("change event", e);
+          //editor.fire('change', editor.getData());
+          //document.onchange();
+        });
+      })
+      .catch(error => {
+        console.error(error);
+      });*/
+  }
+
   render() {
     const data = this.props.data || [];
     const activeResourceName = this.props.activeResourceName;
 
     const { page, rowsPerPage } = this.state;
-
+    console.log('render');
     return (
       <Admin>
         <Grid container>
@@ -140,7 +178,6 @@ class Crud extends Component {
                 </h3>
                 {this.props.activeRow && (
                   <Formik
-                    enableReinitialize={true}
                     initialValues={this.props.activeRow}
                     validate={values => {
                       const errors = {};
@@ -158,119 +195,127 @@ class Crud extends Component {
                       handleChange,
                       handleBlur,
                       handleSubmit,
-                      isSubmitting
-                    }) => (
-                      <form onSubmit={handleSubmit}>
-                        {this.state.formModel.map(field => {
-                          let Input = null;
-                          console.log(values);
+                      isSubmitting,
+                      setFieldValue,
+                      setFieldTouched
+                    }) => {
 
-                          //if (field.type == "text") {
-                          Input = (
-                            <TextField
-                              select={field.type == "relation"}
-                              multiline={field.type == "textarea"}
-                              name={field.name}
-                              label={field.name}
-                              fullWidth
-                              onChange={handleChange}
-                              onBlur={handleBlur}
-                              value={values[field.name]}
-                            >
-                              {field.options &&
-                                field.options.map(opt => {
-                                  return (
-                                    <option value={opt.value}>
-                                      {opt.text}
-                                    </option>
-                                  );
-                                })}
-                            </TextField>
-                          );
-                          //}
+                      return (
+                        <form onSubmit={handleSubmit}>
+                          {this.state.formModel.map(field => {
+                            let Input = null;
+                            //console.log(values);
 
-                          if (field.type == "pivotRelation") {
+                            //if (field.type == "text") {
                             Input = (
-                              <FormControl component="fieldset">
-                                <FormLabel component="legend">
-                                  <span style={{ fontSize: "0.7rem" }}>
-                                    {field.name}
-                                  </span>
-                                </FormLabel>
-                                <FormGroup row justify-center>
-                                  {field.options.map(option => {
-                                    const checked =
-                                      _.indexOf(
-                                        values[field.name],
-                                        option.value.toString()
-                                      ) !== -1;
-
+                              <TextField
+                                select={field.type == "relation"}
+                                multiline={field.type == "textarea"}
+                                name={field.name}
+                                label={field.name}
+                                fullWidth
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                value={values[field.name]}
+                              >
+                                {field.options &&
+                                  field.options.map(opt => {
                                     return (
-                                      <FormControlLabel
-                                        className="w-1/3 checkbox-label"
-                                        control={
-                                          <Checkbox
-                                            name={field.name}
-                                            checked={checked}
-                                            onChange={e =>
-                                              this.handleCheckboxChange(
-                                                e,
-                                                values
-                                              )
-                                            }
-                                            value={option.value}
-                                          />
-                                        }
-                                        label={option.text}
-                                      />
+                                      <option value={opt.value}>
+                                        {opt.text}
+                                      </option>
                                     );
                                   })}
-                                </FormGroup>
-                              </FormControl>
+                              </TextField>
                             );
-                          }
+                            //}
 
-                          if (field.type == "editor") {
-                            Input = <ReactQuill
-                              name={field.name}
-                              label={field.name}
-                              onChange={handleChange}
-                              onBlur={handleBlur}
-                              value={values[field.name]}
-                            />;
-                          }
+                            if (field.type == "pivotRelation") {
+                              Input = (
+                                <FormControl component="fieldset">
+                                  <FormLabel component="legend">
+                                    <span style={{ fontSize: "0.7rem" }}>
+                                      {field.name}
+                                    </span>
+                                  </FormLabel>
+                                  <FormGroup row justify-center>
+                                    {field.options.map(option => {
+                                      const checked =
+                                        _.indexOf(
+                                          values[field.name],
+                                          option.value.toString()
+                                        ) !== -1;
 
-                          return (
-                            <div className="mb-8">
-                              {Input}
-                              {touched[field.name] &&
-                                errors[field.name] && (
-                                  <div>{errors[field.name]}</div>
-                                )}
-                            </div>
-                          );
-                        })}
+                                      return (
+                                        <FormControlLabel
+                                          className="w-1/3 checkbox-label"
+                                          control={
+                                            <Checkbox
+                                              name={field.name}
+                                              checked={checked}
+                                              onChange={e =>
+                                                this.handleCheckboxChange(
+                                                  e,
+                                                  values
+                                                )
+                                              }
+                                              value={option.value}
+                                            />
+                                          }
+                                          label={option.text}
+                                        />
+                                      );
+                                    })}
+                                  </FormGroup>
+                                </FormControl>
+                              );
+                            }
 
-                        <p className="float-right">
-                          <Button
-                            type="submit"
-                            variant="contained"
-                            color="primary"
-                            disabled={isSubmitting}
-                          >
-                            <DoneIcon className="mr-1" /> Save
-                          </Button>{" "}
-                          <Button
-                            type="button"
-                            className="btn-white"
-                            variant="contained"
-                          >
-                            Back
-                          </Button>
-                        </p>
-                        <div className="clearfix" />
-                      </form>
-                    )}
+                            if (field.type == "editor") {
+                              Input = (
+                                <CKEditor
+                                  editor={ClassicEditorBuild}
+                                  data={values[field.name]}
+                                  name={field.name}
+                                  label={field.name}
+                                  onChange={setFieldValue}
+
+                                />
+                              );
+                            }
+
+                            return (
+                              <div className="mb-8">
+                                {Input}
+                                {touched[field.name] &&
+                                  errors[field.name] && (
+                                    <div>{errors[field.name]}</div>
+                                  )}
+                              </div>
+                            );
+                          })}
+
+                          <p className="float-right">
+                            <Button
+                              type="submit"
+                              variant="contained"
+                              color="primary"
+                              disabled={isSubmitting}
+                            >
+                              <DoneIcon className="mr-1" /> Save
+                            </Button>{" "}
+                            <Button
+                              type="button"
+                              className="btn-white"
+                              variant="contained"
+                            >
+                              Back
+                            </Button>
+                          </p>
+                          <div className="clearfix" />
+                        </form>
+                      );
+                    }}
                   />
                 )}
               </div>
@@ -327,7 +372,7 @@ class Crud extends Component {
                                 variant="contained"
                                 color="primary"
                                 size="small"
-                                onClick={() => this.props.setActiveRow(row)}
+                                onClick={() => this.setRow(row)}
                               >
                                 <EditIcon className="mr-1 icon-sm" />
                                 {"  "} Edit
