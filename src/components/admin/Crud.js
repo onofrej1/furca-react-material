@@ -35,22 +35,8 @@ import FormGroup from "@material-ui/core/FormGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
 import Button from "@material-ui/core/Button";
-import ReactQuill from "react-quill";
-import "react-quill/dist/quill.snow.css"; // ES6
-import RichTextEditor from "react-rte";
-import CKEditor from "./../ckeditor";
 
-import Essentials from '@ckeditor/ckeditor5-essentials/src/essentials';
-import Paragraph from '@ckeditor/ckeditor5-paragraph/src/paragraph';
-import Bold from '@ckeditor/ckeditor5-basic-styles/src/bold';
-import Italic from '@ckeditor/ckeditor5-basic-styles/src/italic';
-import Image from '@ckeditor/ckeditor5-image/src/image';
-import ImageCaption from '@ckeditor/ckeditor5-image/src/imagecaption';
-
-import RichEditorExample from './../RichEditorExample';
-
-import ClassicEditorBuild from "@ckeditor/ckeditor5-build-classic/build/ckeditor";
-//import {MyEditor} from './../../aaa/ckeditor';
+import RichEditor from "./../RichEditor";
 
 var _ = require("lodash");
 
@@ -138,17 +124,11 @@ class Crud extends Component {
   };
 
   render() {
-
-    const config = {
-        plugins: [ Essentials, Paragraph, Bold, Italic, Image, ImageCaption ],
-        toolbar: [ 'bold', 'italic']
-    };
-
     const data = this.props.data || [];
     const activeResourceName = this.props.activeResourceName;
 
     const { page, rowsPerPage } = this.state;
-    console.log('render');
+
     return (
       <Admin>
         <Grid container>
@@ -186,12 +166,10 @@ class Crud extends Component {
                       setFieldValue,
                       setFieldTouched
                     }) => {
-
                       return (
                         <form onSubmit={handleSubmit}>
                           {this.state.formModel.map(field => {
                             let Input = null;
-                            //console.log(values);
 
                             //if (field.type == "text") {
                             Input = (
@@ -260,13 +238,20 @@ class Crud extends Component {
 
                             if (field.type == "editor") {
                               Input = (
-                                <RichEditorExample
-                                data={values[field.name]}
-                                name={field.name}
-                                label={field.name}
-                                onChange={setFieldValue}
-                                 />
-
+                                <FormControl component="fieldset" style={{width:'100%'}}>
+                                  <FormLabel component="legend" className="mb-3">
+                                    <span style={{ fontSize: "0.7rem" }}>
+                                      {field.name}
+                                    </span>
+                                  </FormLabel>
+                                  <FormGroup>
+                                    <RichEditor
+                                      data={values[field.name]}
+                                      name={field.name}
+                                      onChange={setFieldValue}
+                                    />
+                                  </FormGroup>
+                                </FormControl>
                               );
                             }
 

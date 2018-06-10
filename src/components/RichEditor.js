@@ -1,18 +1,53 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import './../editor.css';
-import { Editor, EditorState, RichUtils } from "draft-js";
+import "./../richtext-editor.css";
+import {
+  Editor,
+  ContentState,
+  EditorState,
+  RichUtils,
+  convertFromRaw,
+  convertFromHTML,
+  convertToRaw
+} from "draft-js";
 
-export default class RichEditorExample extends React.Component {
+import FormatBoldIcon from "@material-ui/icons/FormatBold";
+import FormatItalicIcon from "@material-ui/icons/FormatItalic";
+import FormatUnderlinedIcon from "@material-ui/icons/FormatUnderlined";
+import KeyboardIcon from "@material-ui/icons/Keyboard";
+import Button from '@material-ui/core/Button';
+
+export default class RichEditor extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { editorState: EditorState.createEmpty() };
+
+    let editorState = EditorState.createEmpty();
+    if (this.props.data) {
+      var isJSON = true;
+      let content = null;
+      try {
+        content = convertFromRaw(JSON.parse(this.props.data));
+      } catch (e) {
+        const htmlBlocks = convertFromHTML(this.props.data);
+        content = ContentState.createFromBlockArray(
+          htmlBlocks.contentBlocks,
+          htmlBlocks.entityMap
+        );
+      }
+
+      editorState = EditorState.createWithContent(content);
+    }
+
+    this.state = { editorState };
 
     this.focus = () => this.refs.editor.focus();
-    this.onChange = (editorState) => {
+    this.onChange = editorState => {
       this.setState({ editorState });
-      this.props.onChange('content', editorState.getCurrentContent().getText());
-    }
+      const content = JSON.stringify(
+        convertToRaw(editorState.getCurrentContent())
+      );
+      this.props.onChange(this.props.name, content);
+    };
 
     this.handleKeyCommand = command => this._handleKeyCommand(command);
     this.onTab = e => this._onTab(e);
@@ -48,9 +83,7 @@ export default class RichEditorExample extends React.Component {
   render() {
     const { editorState } = this.state;
 
-    // If the user changes block type before entering any text, we can
-    // either style the placeholder or hide it. Let's just hide it now.
-    let className = "RichEditor-editor";
+    let className = "editor";
     var contentState = editorState.getCurrentContent();
     if (!contentState.hasText()) {
       if (
@@ -63,17 +96,23 @@ export default class RichEditorExample extends React.Component {
       }
     }
 
+    if(this.props.readOnly) {
+      return <Editor editorState={editorState} readOnly/>
+    }
+
     return (
-      <div className="RichEditor-root">
-        <BlockStyleControls
-          editorState={editorState}
-          onToggle={this.toggleBlockType}
-        />
-        <InlineStyleControls
-          editorState={editorState}
-          onToggle={this.toggleInlineStyle}
-        />
-        <div className={className} onClick={this.focus}>
+      <div className="editor-wrapper">
+        <div className="editor-controls">
+          <BlockStyleControls
+            editorState={editorState}
+            onToggle={this.toggleBlockType}
+          />
+          <InlineStyleControls
+            editorState={editorState}
+            onToggle={this.toggleInlineStyle}
+          />
+        </div>
+        <div className="editor-content" onClick={this.focus}>
           <Editor
             blockStyleFn={getBlockStyle}
             customStyleMap={styleMap}
@@ -127,7 +166,13 @@ class StyleButton extends React.Component {
 
     return (
       <span className={className} onMouseDown={this.onToggle}>
-        {this.props.label}
+        {this.props.icon ? (
+          <Button variant="contained" color="default" size="small">
+            <this.props.icon />
+          </Button>
+        ) : (
+          this.props.label
+        )}
       </span>
     );
   }
@@ -170,10 +215,10 @@ const BlockStyleControls = props => {
 };
 
 var INLINE_STYLES = [
-  { label: "Bold", style: "BOLD" },
-  { label: "Italic", style: "ITALIC" },
-  { label: "Underline", style: "UNDERLINE" },
-  { label: "Monospace", style: "CODE" }
+  { icon: FormatBoldIcon, label: "Bold", style: "BOLD" },
+  { icon: FormatItalicIcon, label: "Italic", style: "ITALIC" },
+  { icon: FormatUnderlinedIcon, label: "Underline", style: "UNDERLINE" },
+  { icon: KeyboardIcon, label: "Monospace", style: "CODE" }
 ];
 
 const InlineStyleControls = props => {
@@ -186,6 +231,7 @@ const InlineStyleControls = props => {
           key={type.label}
           active={currentStyle.has(type.style)}
           label={type.label}
+          icon={type.icon}
           onToggle={props.onToggle}
           style={type.style}
         />
