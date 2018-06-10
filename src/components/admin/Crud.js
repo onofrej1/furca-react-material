@@ -40,11 +40,19 @@ import "react-quill/dist/quill.snow.css"; // ES6
 import RichTextEditor from "react-rte";
 import CKEditor from "./../ckeditor";
 
+import Essentials from '@ckeditor/ckeditor5-essentials/src/essentials';
+import Paragraph from '@ckeditor/ckeditor5-paragraph/src/paragraph';
+import Bold from '@ckeditor/ckeditor5-basic-styles/src/bold';
+import Italic from '@ckeditor/ckeditor5-basic-styles/src/italic';
+import Image from '@ckeditor/ckeditor5-image/src/image';
+import ImageCaption from '@ckeditor/ckeditor5-image/src/imagecaption';
+
+import RichEditorExample from './../RichEditorExample';
+
 import ClassicEditorBuild from "@ckeditor/ckeditor5-build-classic/build/ckeditor";
+//import {MyEditor} from './../../aaa/ckeditor';
 
 var _ = require("lodash");
-
-var myHandleChange;
 
 class Crud extends Component {
   constructor(props) {
@@ -59,17 +67,11 @@ class Crud extends Component {
     this.setResource = this.setResource.bind(this);
     this.createViewModels = this.createViewModels.bind(this);
     this.setRow = this.setRow.bind(this);
-    this.initCkeditor = this.initCkeditor.bind(this);
   }
 
   componentDidMount() {
     const { match: { params } } = this.props;
-    this.initCkeditor();
     this.setResource(params.resource);
-  }
-
-  componentDidUpdate() {
-    this.initCkeditor();
   }
 
   componentWillReceiveProps(newProps) {
@@ -135,28 +137,13 @@ class Crud extends Component {
     this.setState({ rowsPerPage: event.target.value });
   };
 
-  initCkeditor() {
-    /*ClassicEditor.create(document.querySelector(".editor"))
-      .then(editor => {
-        console.log(editor);
-        this.editorInstance = editor;
-        const document = this.editorInstance.model.document;
-        console.log("editor", editor);
-        console.log("model", this.editorInstance.model);
-        console.log("document", document);
-        document.on("change", e => {
-          //editor.element.events;
-          console.log("change event", e);
-          //editor.fire('change', editor.getData());
-          //document.onchange();
-        });
-      })
-      .catch(error => {
-        console.error(error);
-      });*/
-  }
-
   render() {
+
+    const config = {
+        plugins: [ Essentials, Paragraph, Bold, Italic, Image, ImageCaption ],
+        toolbar: [ 'bold', 'italic']
+    };
+
     const data = this.props.data || [];
     const activeResourceName = this.props.activeResourceName;
 
@@ -273,14 +260,13 @@ class Crud extends Component {
 
                             if (field.type == "editor") {
                               Input = (
-                                <CKEditor
-                                  editor={ClassicEditorBuild}
-                                  data={values[field.name]}
-                                  name={field.name}
-                                  label={field.name}
-                                  onChange={setFieldValue}
+                                <RichEditorExample
+                                data={values[field.name]}
+                                name={field.name}
+                                label={field.name}
+                                onChange={setFieldValue}
+                                 />
 
-                                />
                               );
                             }
 

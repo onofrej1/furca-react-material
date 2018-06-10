@@ -17,7 +17,7 @@ export default class CKEditor extends React.Component {
 	// Update editor data if data property is changed.
 	componentWillReceiveProps( newProps ) {
 		if ( this.editorInstance && newProps.data ) {
-			this.editorInstance.setData( newProps.data );
+			//this.editorInstance.setData( newProps.data );
 		}
 	}
 
@@ -34,8 +34,6 @@ export default class CKEditor extends React.Component {
 	// Render <div> element which will be replaced by CKEditor.
 	render() {
 	  return <div ref={ ref => ( this.domContainer = ref ) }></div>;
-    /*return <textarea ref={ ref => ( this.domContainer = ref )} name={this.props.name}
-    label={this.props.label}></textarea>*/
 	}
 
 	_initializeEditor() {
@@ -56,11 +54,8 @@ export default class CKEditor extends React.Component {
 
 				if ( this.props.onChange ) {
 					const document = this.editorInstance.model.document;
-					document.on( 'change', () => {
-            console.log(document.differ.getChanges());
+					document.on( 'change', () => {      
 						if ( document.differ.getChanges().length > 0 ) {
-            console.log('changexx');
-
 							this.props.onChange( 'content', editor.getData() );
 						}
 					} );
