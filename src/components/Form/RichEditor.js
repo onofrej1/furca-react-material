@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import "./../richtext-editor.css";
+import "./../../richtext-editor.css";
 import {
   Editor,
   ContentState,
@@ -49,20 +49,9 @@ export default class RichEditor extends React.Component {
       this.props.onChange(this.props.name, content);
     };
 
-    this.handleKeyCommand = command => this._handleKeyCommand(command);
     this.onTab = e => this._onTab(e);
     this.toggleBlockType = type => this._toggleBlockType(type);
     this.toggleInlineStyle = style => this._toggleInlineStyle(style);
-  }
-
-  _handleKeyCommand(command) {
-    const { editorState } = this.state;
-    const newState = RichUtils.handleKeyCommand(editorState, command);
-    if (newState) {
-      this.onChange(newState);
-      return true;
-    }
-    return false;
   }
 
   _onTab(e) {
@@ -117,7 +106,6 @@ export default class RichEditor extends React.Component {
             blockStyleFn={getBlockStyle}
             customStyleMap={styleMap}
             editorState={editorState}
-            handleKeyCommand={this.handleKeyCommand}
             onChange={this.onChange}
             onTab={this.onTab}
             placeholder="Tell a story..."

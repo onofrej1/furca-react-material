@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import RichEditor from './RichEditor';
+import RichEditor from './Form/RichEditor';
 
 class Page extends Component {
   render() {
