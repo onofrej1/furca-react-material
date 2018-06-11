@@ -11,7 +11,7 @@ import Divider from "@material-ui/core/Divider";
 import Grid from "@material-ui/core/Grid";
 
 import Models from "./../../Models";
-import {Header} from './Header';
+import { Header } from "./Header";
 import {
   fetchResourceData,
   fetchResourceFields,
@@ -36,34 +36,33 @@ class Admin extends Component {
   render() {
     const resources = Object.keys(Models);
 
+    const ResourcesMenu = () => {
+      return resources.map(resource => (
+        <ListItem
+          key={resource}
+          button
+          onClick={() => this.setResource(resource)}
+        >
+          <ListItemIcon>
+            <ListIcon style={{ fontSize: 35 }} />
+          </ListItemIcon>
+          <ListItemText primary={resource} />
+        </ListItem>
+      ));
+    };
+
     return (
       <div>
         <Header />
         <Grid container>
           <Grid item xs={2}>
-            <div
-              style={{ borderRight: "1px solid lightgray", minHeight: "800px" }}
-            >
+            <div className="nav-wrapper">
               <List component="nav">
                 <ListItem button>
                   <ListItemText primary="Select table" />
                 </ListItem>
                 <Divider />
-                {resources.map(resource => (
-                  <ListItem
-                    key={resource}
-                    button
-                    onClick={() => this.setResource(resource)}
-                  >
-                    <ListItemIcon>
-                      <ListIcon style={{ fontSize: 35 }} />
-                    </ListItemIcon>
-                    <ListItemText
-                      primary={resource}
-                      className="menu-list-text"
-                    />
-                  </ListItem>
-                ))}
+                <ResourcesMenu />
               </List>
               <Divider />
               <List component="nav">

@@ -12,11 +12,6 @@ body {
   background-color: white!important;
 }
 
-.bg-primary {
-  color: #fff;
-  background-color: #3f51b5 !important;
-}
-
 .checkbox-label {
   margin:0!important;
   padding: 10px!important;
@@ -30,7 +25,7 @@ button {
   font-size: 15px!important;
 }
 
-.menu-list-text {
-  margin: 0px !important;
-  padding: 0px !important;
+.nav-wrapper {
+  border-right: 1px solid lightgray;
+  min-height: 1000px;
 }

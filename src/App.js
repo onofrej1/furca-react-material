@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import "./App.css";
 import Resource from "./components/admin/Resource";
 import { Route, Switch } from "react-router-dom";
 import { withRouter } from "react-router-dom";
