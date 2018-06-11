@@ -22,6 +22,15 @@ class Form extends Component {
       </p>
     );
 
+    const handleCheckboxChange = (event, values) => {
+      const value = event.target.value;
+      const oldValues = values[event.target.name] || [];
+      values[event.target.name] = event.target.checked
+        ? [...oldValues, value]
+        : oldValues.filter(item => item !== value);
+      this.props.setActiveRow(values);
+    };
+
     return (
       <div>
         {data && (
@@ -61,7 +70,7 @@ class Form extends Component {
                       Input = (
                         <ChecklistField
                           field={field}
-                          handleCheckboxChange={this.handleCheckboxChange}
+                          handleChange={handleCheckboxChange}
                           values={values}
                         />
                       );

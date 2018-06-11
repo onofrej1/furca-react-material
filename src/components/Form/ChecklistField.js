@@ -8,7 +8,7 @@ import Checkbox from "@material-ui/core/Checkbox";
 
 var _ = require("lodash");
 
-export const ChecklistField = ({ field, values, handleCheckboxChange }) => (
+export const ChecklistField = ({ field, values, handleChange }) => (
   <FormControl component="fieldset">
     <FormLabel component="legend">
       <span style={{ fontSize: "0.7rem" }}>{field.name}</span>
@@ -25,7 +25,7 @@ export const ChecklistField = ({ field, values, handleCheckboxChange }) => (
               <Checkbox
                 name={field.name}
                 checked={checked}
-                onChange={e => handleCheckboxChange(e, values)}
+                onChange={(e) => handleChange(e, values)}
                 value={option.value+''}
               />
             }
