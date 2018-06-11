@@ -7,9 +7,6 @@ import TableCell from "@material-ui/core/TableCell";
 import TableHead from "@material-ui/core/TableHead";
 import TableFooter from "@material-ui/core/TableFooter";
 import TableRow from "@material-ui/core/TableRow";
-import EditIcon from "@material-ui/icons/Edit";
-import DeleteIcon from "@material-ui/icons/Delete";
-import Button from "@material-ui/core/Button";
 import {Actions} from "./Actions";
 
 export default class Table extends Component {
@@ -38,7 +35,7 @@ export default class Table extends Component {
         <TableHead>
           <TableRow>
             {fields.map(field => {
-              return <TableCell>{field.field}</TableCell>;
+              return <TableCell key={field.name}>{field.name}</TableCell>;
             })}
             <TableCell>Action</TableCell>
           </TableRow>
@@ -51,10 +48,10 @@ export default class Table extends Component {
                 <TableRow key={row.id}>
                   {fields.map(field => {
                     return (
-                      <TableCell>
+                      <TableCell key={field.name}>
                         {"render" in field
                           ? field.render(row)
-                          : row[field.field]}
+                          : row[field.name]}
                       </TableCell>
                     );
                   })}
@@ -65,7 +62,7 @@ export default class Table extends Component {
         </TableBody>
         <TableFooter>
           <TableRow>
-            <TableCell className="flex" colspan={3}>
+            <TableCell className="flex" colSpan={3}>
               <TablePaginator
                 className="justify-center"
                 count={data.length}

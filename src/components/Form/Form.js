@@ -1,15 +1,8 @@
 import React, { Component } from "react";
 
-import FormLabel from "@material-ui/core/FormLabel";
-import FormControl from "@material-ui/core/FormControl";
-import FormGroup from "@material-ui/core/FormGroup";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Checkbox from "@material-ui/core/Checkbox";
 import DoneIcon from "@material-ui/icons/Done";
 import Button from "@material-ui/core/Button";
-
 import { Formik } from "formik";
-
 import { TextField } from "./TextField";
 import { ChecklistField } from "./ChecklistField";
 import { RichEditorField } from "./RichEditorField";
@@ -34,10 +27,7 @@ class Form extends Component {
         {data && (
           <Formik
             initialValues={data}
-            validate={values => {
-              const errors = {};
-              return errors;
-            }}
+            validate={validate}
             onSubmit={(values, { setSubmitting, setErrors }) => {
               console.log(values);
               onSubmit(values);
@@ -67,7 +57,7 @@ class Form extends Component {
                       />
                     );
 
-                    if (field.type == "checklist") {
+                    if (field.type === "checklist") {
                       Input = (
                         <ChecklistField
                           field={field}
@@ -77,7 +67,7 @@ class Form extends Component {
                       );
                     }
 
-                    if (field.type == "editor") {
+                    if (field.type === "editor") {
                       Input = (
                         <RichEditorField
                           field={field}
@@ -87,7 +77,7 @@ class Form extends Component {
                     }
 
                     return (
-                      <div className="mb-8">
+                      <div className="mb-8" key={field.name}>
                         {Input}
                         {touched[field.name] &&
                           errors[field.name] && <div>{errors[field.name]}</div>}

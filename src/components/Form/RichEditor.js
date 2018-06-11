@@ -1,5 +1,4 @@
 import React from "react";
-import ReactDOM from "react-dom";
 import "./../../richtext-editor.css";
 import {
   Editor,
@@ -23,7 +22,6 @@ export default class RichEditor extends React.Component {
 
     let editorState = EditorState.createEmpty();
     if (this.props.data) {
-      var isJSON = true;
       let content = null;
       try {
         content = convertFromRaw(JSON.parse(this.props.data));
@@ -70,20 +68,7 @@ export default class RichEditor extends React.Component {
   }
 
   render() {
-    const { editorState } = this.state;
-
-    let className = "editor";
-    var contentState = editorState.getCurrentContent();
-    if (!contentState.hasText()) {
-      if (
-        contentState
-          .getBlockMap()
-          .first()
-          .getType() !== "unstyled"
-      ) {
-        className += " RichEditor-hidePlaceholder";
-      }
-    }
+    const { editorState } = this.state;        
 
     if(this.props.readOnly) {
       return <Editor editorState={editorState} readOnly/>

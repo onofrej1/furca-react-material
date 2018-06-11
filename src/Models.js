@@ -11,7 +11,7 @@ const user = {
       show: "title"
     }
   ],
-  list: [{ field: "name", label: "Name" }, { field: "email", label: "Email" }]
+  list: [{ name: "name", label: "Name" }, { name: "email", label: "Email" }]
 };
 
 const article = {
@@ -28,7 +28,7 @@ const article = {
       label: "Tags"
     }
   ],
-  list: [{ field: "title" }, { field: "author" }]
+  list: [{ name: "title" }, { name: "author" }]
 };
 
 const menuItem = {
@@ -58,14 +58,14 @@ const menuItem = {
     }
   ],
   list: [
-    { field: "title", label: "Title" },
+    { name: "title", label: "Title" },
     {
-      field: "parent",
+      name: "parent",
       label: "Parent",
       render: params => params.parent && params.parent.title
     },
     {
-      field: "page",
+      name: "page",
       label: "Page",
       render: params => params.page && params.page.title
     }
@@ -80,7 +80,7 @@ const page = {
   ],
   list: [
     {
-      field: "title",
+      name: "title",
       label: "Title"
     }
   ]
@@ -94,20 +94,20 @@ const hamburg = {
     { label: "Notes", type: "textarea", rows: 8, name: "notes" }
   ],
   list: [
-    { field: "title", label: "Title" },
+    { name: "title", label: "Title" },
     {
-      field: "event_date",
+      name: "event_date",
       label: "Event date",
       render: params => `${params.item.event_date}`
     },
-    { field: "notes", label: "Notes" }
+    { name: "notes", label: "Notes" }
   ]
 };
 
 const tag = {
   title: "Tags",
   form: [{ label: "title", name: "title", type: "text" }],
-  list: [{ field: "title", label: "Title" }]
+  list: [{ name: "title", label: "Title" }]
 };
 
 const models = { user, page, tag, article, menuItem, hamburg };

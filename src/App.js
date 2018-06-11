@@ -1,11 +1,9 @@
 import React, { Component } from "react";
-import logo from "./logo.svg";
 import "./App.css";
-import Crud from "./components/admin/Crud";
+import Resource from "./components/admin/Resource";
 import { Route, Switch } from "react-router-dom";
 import { withRouter } from "react-router-dom";
 import Page from "./components/Page";
-import { withTheme } from '@material-ui/core/styles';
 
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 
@@ -33,7 +31,7 @@ class App extends Component {
     if (location.startsWith("/admin")) {
       return (
         <Switch>
-          <Route path={"/admin/crud/:resource"} component={Crud} />
+          <Route path={"/admin/resource/:resource"} component={Resource} />
         </Switch>
       );
     }

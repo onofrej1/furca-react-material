@@ -6,7 +6,7 @@ import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 import LastPageIcon from '@material-ui/icons/LastPage';
 
-export default class TablePaginator extends React.Component {
+export default class TablePaginator extends Component {
   handleFirstPageButtonClick = event => {
     this.props.onChangePage(event, 0);
   };
@@ -27,7 +27,7 @@ export default class TablePaginator extends React.Component {
   };
 
   render() {
-    const { classes, count, page, rowsPerPage, theme } = this.props;
+    const { count, page, rowsPerPage } = this.props;
     const from = page * rowsPerPage > 0 ? page * rowsPerPage : 1;
     const to = (page+1)*rowsPerPage > count ? count :  (page+1)*rowsPerPage;
 

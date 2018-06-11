@@ -1,11 +1,9 @@
-import React, { Component } from "react";
+import React from "react";
 
 import FormLabel from "@material-ui/core/FormLabel";
 import FormControl from "@material-ui/core/FormControl";
 import FormGroup from "@material-ui/core/FormGroup";
 import RichEditor from './RichEditor';
-
-var _ = require("lodash");
 
 export const RichEditorField = ({ field, setFieldValue }) => (
   <FormControl component="fieldset" style={{ width: "100%" }}>

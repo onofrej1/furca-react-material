@@ -1,29 +1,24 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import Models from "./../../Models";
 
+import Paper from "@material-ui/core/Paper";
+import AddIcon from "@material-ui/icons/Add";
+import Grid from "@material-ui/core/Grid";
+import Button from "@material-ui/core/Button";
+import TextField from "@material-ui/core/TextField";
+
+import Models from "./../../Models";
+import Table from "./../Table";
+import Form from "./../Form/Form";
 import {
   fetchResourceData,
-  fetchResourceFields,
   setActiveRow,
-  saveResourceData,
-  setActiveResourceName
+  setActiveResourceName,
+  saveResourceData
 } from "./../../actions";
 import Admin from "./Admin";
 
-import Paper from "@material-ui/core/Paper";
-
-import AddIcon from "@material-ui/icons/Add";
-import Grid from "@material-ui/core/Grid";
-import AppBar from "@material-ui/core/AppBar";
-import Toolbar from "@material-ui/core/Toolbar";
-import Button from "@material-ui/core/Button";
-
-import Table from "./../Table";
-import TextField from "@material-ui/core/TextField";
-import Form from "./../Form/Form";
-
-class Crud extends Component {
+class Resource extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -46,7 +41,7 @@ class Crud extends Component {
     const resource = newProps.match.params.resource;
     this.createViewModels(resource);
 
-    if (this.props.activeResourceName != resource) {
+    if (this.props.activeResourceName !== resource) {
       this.setResource(resource);
     }
   }
@@ -66,7 +61,6 @@ class Crud extends Component {
 
     for (var i in form) {
       var field = form[i];
-      var options = [];
       if (field.resource) {
         const relationResource = this.props.resourceData[field.resource];
 
@@ -74,17 +68,18 @@ class Crud extends Component {
           this.props.fetchResourceData(field.resource);
           continue;
         }
-        const options = relationResource.map(data => {
-          return { value: data.id, text: data[field.show] };
-        });
+        const options = relationResource.map(data => ({
+          value: data.id,
+          text: data[field.show]
+        }));
         form = form.map(
-          f => (f.name == field.name ? { ...field, options } : f)
+          f => (f.name === field.name ? { ...field, options } : f)
         );
       }
     }
     this.setState({
       formModel: form,
-      listModel: [{ field: "id" }, ...list]
+      listModel: [{ name: "id" }, ...list]
     });
   }
 
@@ -103,45 +98,44 @@ class Crud extends Component {
   }
 
   render() {
-    const data = this.props.data || [];
-    const activeResourceName = this.props.activeResourceName;
-
-    const { page, rowsPerPage } = this.state;
+    const {
+      data = [],
+      activeRow,
+      activeResourceName,
+      setActiveRow
+    } = this.props;
+    const { formModel, listModel } = this.state;
 
     return (
       <Admin>
         <Grid container>
           <Grid item xs />
-          <Grid item xs={this.props.activeRow ? 6 : 12}>
-            {this.props.activeRow && (
-              <Paper>
+          <Grid item xs={activeRow ? 6 : 12}>
+            {activeRow && (
+              <Paper className="p-4">
                 {/* <div class="bg-white border-b-2 py-2 px-1" elevation="8">
                 <h3><EditIcon /> {this.props.activeResourceName}</h3>
               </div>*/}
-                <div className="p-4">
-                  <h3 className="mb-3">
-                    Add/Edit {this.props.activeResourceName}
-                  </h3>
-                  <Form
-                    fields={this.state.formModel}
-                    data={this.props.activeRow}
-                    onSubmit={this.onSubmit}
-                  />
-                </div>
+                <h3 className="mb-3">Add/Edit {activeResourceName}</h3>
+                <Form
+                  fields={formModel}
+                  data={activeRow}
+                  onSubmit={this.onSubmit}
+                />
               </Paper>
             )}
 
-            {!this.props.activeRow && (
+            {!activeRow && (
               <Paper className="p-4">
                 <p className="float-left">
                   <Button
                     variant="contained"
                     className="btn-white"
                     size="small"
-                    onClick={() => this.props.setActiveRow({})}
+                    onClick={() => setActiveRow({})}
                   >
                     <AddIcon className="mr-1 icon-sm" /> Add new{" "}
-                    {this.props.activeResourceName}
+                    {activeResourceName}
                   </Button>
                 </p>
 
@@ -150,11 +144,7 @@ class Crud extends Component {
                   name="search"
                   label="Search"
                 />
-                <Table
-                  data={this.props.data}
-                  fields={this.state.listModel}
-                  editAction={this.edit}
-                />
+                <Table data={data} fields={listModel} editAction={this.edit} />
               </Paper>
             )}
           </Grid>
@@ -168,17 +158,16 @@ class Crud extends Component {
 const mapStateToProps = (state, ownProps) => {
   return {
     activeResourceName: state.activeResourceName,
-    resourceData: state.resourceData,
     data: state.resourceData[state.activeResourceName],
     fields: state.resourceFields[state.activeResourceName],
-    activeRow: state.activeRow
+    activeRow: state.activeRow,
+    resourceData: state.resourceData,
   };
 };
 
 export default connect(mapStateToProps, {
   setActiveResourceName,
-  saveResourceData,
   fetchResourceData,
-  fetchResourceFields,
-  setActiveRow
-})(Crud);
+  setActiveRow,
+  saveResourceData
+})(Resource);
