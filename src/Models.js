@@ -31,6 +31,10 @@ const article = {
   list: [{ name: "title" }, { name: "author" }]
 };
 
+const menu = {
+  title: "Menu"
+}
+
 const menuItem = {
   title: "Menu items",
   form: [
@@ -110,6 +114,6 @@ const tag = {
   list: [{ name: "title", label: "Title" }]
 };
 
-const models = { user, page, tag, article, menuItem, hamburg };
+const models = { user, page, tag, article, menuItem, menu, hamburg };
 
 export default models;

@@ -1,4 +1,7 @@
 import { url } from "./index.js";
+import Models from "./../Models";
+
+var _ = require('lodash');
 
 export const apiUrl = (state = url, action) => {
   switch (action.type) {
@@ -53,6 +56,24 @@ export const resource = (state = {}, action) => {
     case "SET_RESOURCE":
       return { ...state, [action.resource.name]: { ...action.resource } };
 
+    default:
+      return state;
+  }
+};
+
+export const resourceModel = (state = Models, action) => {
+  switch (action.type) {
+    case "SET_OPTIONS_DATA":
+    const {resource, name, show} = action.field;
+      const options = action.options.map(option => ({text: option[show], value: option.id}));
+      let resourceObj = state[action.resource];
+
+      resourceObj = resourceObj.form.map(field => {
+        if(field.name == name) field.options = options;
+        return field;
+      });
+
+      return { ...state, resourceObj };
     default:
       return state;
   }

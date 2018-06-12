@@ -1,11 +1,12 @@
 import {fetchFiles, setActiveDirectory} from './files.js';
 import {login, register} from './auth.js';
+
 import {
   setActiveResourceName,
   setResourceRow,
   deleteResourceRow,
   fetchResourceData,
-  fetchResourceFields,
+  fetchResourceFields,  
   setResource,
   setResourceUrl,
   saveResourceData

@@ -1,5 +1,5 @@
 import { combineReducers } from "redux";
-import { apiUrl, activeResourceName, resource, resourceData, resourceFields } from "./resources";
+import { apiUrl, activeResourceName, resource, resourceModel, resourceData, resourceFields } from "./resources";
 import { files, activeDirectory } from "./files";
 import { user } from "./auth";
 
@@ -28,6 +28,7 @@ const reducers = combineReducers({
   resourceData,
   resourceFields,
   resource,
+  resourceModel,
   /* files.js */
   files,
   activeDirectory,

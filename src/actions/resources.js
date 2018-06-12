@@ -24,10 +24,20 @@ export const setResourceRow = (name, row) => {
 };
 
 export const setActiveResourceName = name => {
-  return {
-    type: "SET_ACTIVE_RESOURCE_NAME",
-    activeResourceName: name
-  };
+  return (dispatch, getState) => {
+    const form = getState().resourceModel[name].form;
+    for (var i in form) {
+      var field = form[i];
+      if (field.resource) {
+        dispatch(fetchOptions(name, field));
+      }
+    }
+
+    dispatch({
+      type: "SET_ACTIVE_RESOURCE_NAME",
+      activeResourceName: name
+    });
+  }
 };
 
 export const fetchResourceData = name => {
@@ -97,5 +107,25 @@ export const saveResourceData = data => {
       //dispatch(setResourceRow(resourceName, updatedRow));
       dispatch(fetchResourceData(resourceName));
     });
+  };
+};
+
+export const fetchOptions = (formResource, field) => {
+
+  return (dispatch, getState) => {
+    let baseUrl = getState().apiUrl;
+    let url = baseUrl + "/" + field.resource;
+    console.log('ffetch');
+    axios
+      //.get(url, { headers: { 'x-access-token': localStorage.token } })
+      .get(url)
+      .then(result => {
+        dispatch({
+          type: "SET_OPTIONS_DATA",
+          resource: formResource,
+          field,
+          options: result.data
+        });
+      });
   };
 };

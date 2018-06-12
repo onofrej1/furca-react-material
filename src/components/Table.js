@@ -30,6 +30,8 @@ export default class Table extends Component {
     const { data = [], fields, editAction } = this.props;
     const { page, rowsPerPage } = this.state;
 
+    if(!fields) return <div></div>
+
     return (
       <MaterialTable>
         <TableHead>

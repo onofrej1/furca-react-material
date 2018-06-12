@@ -6,8 +6,6 @@ import AddIcon from "@material-ui/icons/Add";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
-
-import Models from "./../../Models";
 import Table from "./../Table";
 import Form from "./../Form/Form";
 import {
@@ -21,13 +19,8 @@ import Admin from "./Admin";
 class Resource extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      formModel: [],
-      listModel: []
-    };
 
     this.setResource = this.setResource.bind(this);
-    this.createViewModels = this.createViewModels.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
     this.edit = this.edit.bind(this);
   }
@@ -39,7 +32,6 @@ class Resource extends Component {
 
   componentWillReceiveProps(newProps) {
     const resource = newProps.match.params.resource;
-    this.createViewModels(resource);
 
     if (this.props.activeResourceName !== resource) {
       this.setResource(resource);
@@ -53,34 +45,6 @@ class Resource extends Component {
 
   edit(row) {
     this.props.setActiveRow(row);
-  }
-
-  createViewModels(resource) {
-    let form = Models[resource].form;
-    let list = Models[resource].list;
-
-    for (var i in form) {
-      var field = form[i];
-      if (field.resource) {
-        const relationResource = this.props.resourceData[field.resource];
-
-        if (!relationResource) {
-          this.props.fetchResourceData(field.resource);
-          continue;
-        }
-        const options = relationResource.map(data => ({
-          value: data.id,
-          text: data[field.show]
-        }));
-        form = form.map(
-          f => (f.name === field.name ? { ...field, options } : f)
-        );
-      }
-    }
-    this.setState({
-      formModel: form,
-      listModel: [{ name: "id" }, ...list]
-    });
   }
 
   handleCheckboxChange = (event, values) => {
@@ -102,9 +66,9 @@ class Resource extends Component {
       data = [],
       activeRow,
       activeResourceName,
-      setActiveRow
+      setActiveRow,
+      resourceModel
     } = this.props;
-    const { formModel, listModel } = this.state;
 
     return (
       <Admin>
@@ -118,7 +82,7 @@ class Resource extends Component {
               </div>*/}
                 <h3 className="mb-3">Add/Edit {activeResourceName}</h3>
                 <Form
-                  fields={formModel}
+                  fields={resourceModel.form}
                   data={activeRow}
                   onSubmit={this.onSubmit}
                 />
@@ -144,7 +108,7 @@ class Resource extends Component {
                   name="search"
                   label="Search"
                 />
-                <Table data={data} fields={listModel} editAction={this.edit} />
+                <Table data={data} fields={resourceModel.list} editAction={this.edit} />
               </Paper>
             )}
           </Grid>
@@ -156,12 +120,13 @@ class Resource extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
+  let resourceModel = state.activeResourceName ? state.resourceModel[state.activeResourceName] : {};
+
   return {
     activeResourceName: state.activeResourceName,
-    data: state.resourceData[state.activeResourceName],
-    fields: state.resourceFields[state.activeResourceName],
+    data: state.resourceData[state.activeResourceName],    
     activeRow: state.activeRow,
-    resourceData: state.resourceData,
+    resourceModel: resourceModel,
   };
 };
 
@@ -169,5 +134,5 @@ export default connect(mapStateToProps, {
   setActiveResourceName,
   fetchResourceData,
   setActiveRow,
-  saveResourceData
+  saveResourceData,
 })(Resource);
