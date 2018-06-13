@@ -25,7 +25,7 @@ export const ChecklistField = ({ field, values, handleChange }) => (
               <Checkbox
                 name={field.name}
                 checked={checked}
-                onChange={(e) => handleChange(e, values)}
+                onChange={handleChange}
                 value={option.value+''}
               />
             }

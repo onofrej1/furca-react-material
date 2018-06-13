@@ -3,7 +3,7 @@ import { apiUrl, activeResourceName, resource, resourceModel, resourceData, reso
 import { files, activeDirectory } from "./files";
 import { user } from "./auth";
 
-const url = 'http://localhost/web/laravel/public';
+const url = 'http://nessbox.local/laravel/public';
 const baseUrl = (state = url, action) => {
   return state;
 };

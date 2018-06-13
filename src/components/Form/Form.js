@@ -8,8 +8,15 @@ import { ChecklistField } from "./ChecklistField";
 import { RichEditorField } from "./RichEditorField";
 
 class Form extends Component {
+
+  constructor(props) {
+    super(props);
+
+    this.state = {values: {}};
+  }
+
   render() {
-    const { fields, data, onSubmit, validate } = this.props;
+    const { fields, data = {}, onSubmit, validate } = this.props;
 
     const Buttons = () => (
       <p className="float-right">
@@ -28,7 +35,7 @@ class Form extends Component {
       values[event.target.name] = event.target.checked
         ? [...oldValues, value]
         : oldValues.filter(item => item !== value);
-      this.props.setActiveRow(values);
+        this.setState({values: values});
     };
 
     return (
@@ -52,6 +59,8 @@ class Form extends Component {
               setFieldValue,
               setFieldTouched
             }) => {
+              //console.log('values', values);
+
               return (
                 <form onSubmit={handleSubmit}>
                   {fields.map(field => {
@@ -70,7 +79,7 @@ class Form extends Component {
                       Input = (
                         <ChecklistField
                           field={field}
-                          handleChange={handleCheckboxChange}
+                          handleChange={(e) => handleCheckboxChange(e, values)}
                           values={values}
                         />
                       );
