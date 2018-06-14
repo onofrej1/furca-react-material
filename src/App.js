@@ -38,7 +38,7 @@ class App extends Component {
     }
 
     return (
-      <MuiThemeProvider theme={theme}>
+
         <div>
           <Header />
             <Switch>
@@ -46,7 +46,7 @@ class App extends Component {
             </Switch>
           <Footer />
        </div>
-    </MuiThemeProvider>
+    
     );
   }
 }
