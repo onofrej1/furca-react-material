@@ -1,20 +1,27 @@
 import React, { Component } from "react";
+import Grid from "@material-ui/core/Grid";
+import Paper from "@material-ui/core/Paper";
 
 class Footer extends Component {
   render() {
     return (
-
-        <div>
-          <div className="navbar-text pull-left">
-            <div>O5 bežecký klub FURČA </div>
-            <div>Tokajícka 2, 040 22 Košice Mobil: 0904 246 060</div>
-            <div>E-mail: bohunek.zdenek@maratonfurca.sk</div>
+      <Grid container className="footer">
+        <Grid item md />
+        <Grid item md={5} className="p-4">
+          <div style={{ verticalAlign: "middle" }}>
+            <p>
+              O5 bežecký klub FURČA <br />
+              Tokajícka 2, 040 22 Košice Mobil: 0904 246 060<br />
+              E-mail: bohunek.zdenek@maratonfurca.sk<br />
+            </p>
           </div>
-          <div className="">
-            <a href="http://youtu.be/zJahlKPCL9g" style={{color: 'black'}}>
+        </Grid>
+        <Grid item md={5} className="p-4">
+          <div className="float-right p-3 footer-contact">
+            <span>
               webstránka:<span className="glyphicon glyphicon-envelope" />
               erikonofrej@maratonfurca.sk
-            </a>{" "}
+            </span>{" "}
             <a href="http://www.toplist.sk/" target="_top">
               <img
                 src="http://toplist.sk/count.asp?id=1254971&logo=mc"
@@ -25,8 +32,9 @@ class Footer extends Component {
               />
             </a>
           </div>
-        </div>
-
+        </Grid>
+        <Grid item md />
+      </Grid>
     );
   }
 }

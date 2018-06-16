@@ -28,6 +28,7 @@ const theme = createMuiTheme({
 class App extends Component {
   render() {
     let location = this.props.location.pathname;
+    const menuItems = [];
 
     if (location.startsWith("/admin")) {
       return (
@@ -40,13 +41,13 @@ class App extends Component {
     return (
 
         <div>
-          <Header />
+          <Header menusItem={menuItems} />
             <Switch>
               <Route path="/page" component={Page} />
             </Switch>
           <Footer />
        </div>
-    
+
     );
   }
 }
