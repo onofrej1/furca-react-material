@@ -43,7 +43,7 @@ class App extends Component {
         <div>
           <Header menusItem={menuItems} />
             <Switch>
-              <Route path="/page" component={Page} />
+              <Route path="/page/:id" component={Page} />
             </Switch>
           <Footer />
        </div>

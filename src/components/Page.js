@@ -1,15 +1,36 @@
 import React, { Component } from "react";
 import RichEditor from "./Form/RichEditor";
 import SidebarLayout from "./SidebarLayout";
+import { fetchResourceData } from "./../actions";
+import { connect } from "react-redux";
 
 class Page extends Component {
+  componentDidMount() {
+    this.props.fetchResourceData("page");
+  }
+
   render() {
+    const { match: { params }, pages } = this.props;
+
+    const page = pages && pages.find(page => page.id == params.id);
+    if (!page) return <span />;
+
     return (
-      <SidebarLayout contentTitle="O klube">
-      vznikol 6. februára 2004 ako dôsledok aktivít bežcov – maratóncov, zväčša košického sídliska Furča. V marci 2003 už spomenutá skupina bežcov zorganizovala skúšobný nultý ročník Furčianskeho maratónu – Memoriálu Štefana Semana. A keďže daný ročník sa stretol s pozitívnym ohlasom účastníkov, „ Furčania “ sa rozhodli v organizovaní daných pretekov pokračovať. A tak, aby podujatie dostalo oficiálny rozmer, zaregistrovali O5 bežecký klub Furča ako občianske združenie, ktorého hlavným cieľom od jeho registrácie je udržať organizáciu nimi usporiadaných podujatí na prijateľnej úrovni. 
+      <SidebarLayout contentTitle={page.title}>
+        <RichEditor data={page.body} readOnly />
       </SidebarLayout>
     );
   }
 }
 
-export default Page;
+const mapStateToProps = (state, ownProps) => {
+  let pages = state.resourceData.page ? state.resourceData.page : [];
+
+  return {
+    pages: pages
+  };
+};
+
+export default connect(mapStateToProps, {
+  fetchResourceData
+})(Page);

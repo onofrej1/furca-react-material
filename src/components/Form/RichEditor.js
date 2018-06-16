@@ -19,24 +19,7 @@ import Button from '@material-ui/core/Button';
 export default class RichEditor extends React.Component {
   constructor(props) {
     super(props);
-
-    let editorState = EditorState.createEmpty();
-    if (this.props.data) {
-      let content = null;
-      try {
-        content = convertFromRaw(JSON.parse(this.props.data));
-      } catch (e) {
-        const htmlBlocks = convertFromHTML(this.props.data);
-        content = ContentState.createFromBlockArray(
-          htmlBlocks.contentBlocks,
-          htmlBlocks.entityMap
-        );
-      }
-
-      editorState = EditorState.createWithContent(content);
-    }
-
-    this.state = { editorState };
+    this.state = {editorState: EditorState.createEmpty()};
 
     this.focus = () => this.refs.editor.focus();
     this.onChange = editorState => {
@@ -50,6 +33,33 @@ export default class RichEditor extends React.Component {
     this.onTab = e => this._onTab(e);
     this.toggleBlockType = type => this._toggleBlockType(type);
     this.toggleInlineStyle = style => this._toggleInlineStyle(style);
+    this.createState = this.createState.bind(this);
+  }
+
+  createState(data) {
+    let {editorState} = this.state;
+    if (data) {
+      let content = null;
+      try {
+        content = convertFromRaw(JSON.parse(data));
+      } catch (e) {
+        const htmlBlocks = convertFromHTML(data);
+        content = ContentState.createFromBlockArray(
+          htmlBlocks.contentBlocks,
+          htmlBlocks.entityMap
+        );
+      }
+      editorState = EditorState.createWithContent(content);
+    }
+    this.setState({ editorState });
+  }
+
+  componentDidMount() {
+     this.createState(this.props.data);
+  }
+
+  componentWillReceiveProps(newProps) {
+    this.createState(newProps.data);
   }
 
   _onTab(e) {
@@ -68,7 +78,7 @@ export default class RichEditor extends React.Component {
   }
 
   render() {
-    const { editorState } = this.state;        
+    const { editorState } = this.state;
 
     if(this.props.readOnly) {
       return <Editor editorState={editorState} readOnly/>
