@@ -13,6 +13,15 @@ body {
   line-height: 1.4;
 }
 
+.border-block {
+  border: 1px solid red;
+}
+
+.section-block {
+  border: 1px solid blue;
+  background-color: red;
+}
+
 .toolbar{
   display:flex;
   flex-flow:row nowrap;

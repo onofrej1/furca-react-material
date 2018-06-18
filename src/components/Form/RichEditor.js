@@ -7,19 +7,55 @@ import {
   RichUtils,
   convertFromRaw,
   convertFromHTML,
-  convertToRaw
+  convertToRaw,
+  ContentBlock,
+  Modifier,
+  DefaultDraftBlockRenderMap
 } from "draft-js";
 
+//import Immutable from 'immutable';
+import { OrderedMap, List } from 'immutable';
 import FormatBoldIcon from "@material-ui/icons/FormatBold";
 import FormatItalicIcon from "@material-ui/icons/FormatItalic";
 import FormatUnderlinedIcon from "@material-ui/icons/FormatUnderlined";
 import KeyboardIcon from "@material-ui/icons/Keyboard";
-import Button from '@material-ui/core/Button';
+import Button from "@material-ui/core/Button";
+
+const Immutable = require("immutable");
+
+const blockRenderMap = Immutable.Map({
+  'section': {
+    element: "h3"
+  }
+});
+
+var ID = function() {
+  return (
+    "_" +
+    Math.random()
+      .toString(36)
+      .substr(2, 9)
+  );
+};
+
+// Include 'paragraph' as a valid block and updated the unstyled element but
+// keep support for other draft default block types
+const extendedBlockRenderMap = DefaultDraftBlockRenderMap.merge(blockRenderMap);
+
+function getBlockStyle(contentBlock) {
+  const type = contentBlock.getType();
+  if (type === 'unstyled') {
+    return 'border-block';
+  }
+  if (type === 'section') {
+    return 'section-block';
+  }
+}
 
 export default class RichEditor extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {editorState: EditorState.createEmpty()};
+    this.state = { editorState: EditorState.createEmpty() };
 
     this.focus = () => this.refs.editor.focus();
     this.onChange = editorState => {
@@ -30,14 +66,52 @@ export default class RichEditor extends React.Component {
       this.props.onChange(this.props.name, content);
     };
 
-    this.onTab = e => this._onTab(e);
-    this.toggleBlockType = type => this._toggleBlockType(type);
-    this.toggleInlineStyle = style => this._toggleInlineStyle(style);
+    this.onTab = e => this.onTab(e);
+    this.toggleBlockType = this.toggleBlockType.bind(this);
+    this.toggleInlineStyle = this.toggleInlineStyle.bind(this);
     this.createState = this.createState.bind(this);
+    this.addSection = this.addSection.bind(this);
+  }
+
+  addSection() {
+    console.log("add section");
+    let content = this.state.editorState.getCurrentContent();
+
+    var selectionState = this.state.editorState.getSelection();
+    var anchorKey = selectionState.getStartKey();
+    var blockMap = content.getBlockMap();
+    var block = blockMap.get(anchorKey);
+    console.log(block.getType());
+
+    const newBlock = new ContentBlock({
+      key: ID(),
+      type: 'section',
+      text: 'pridany'
+    });
+    console.log(newBlock.getType());
+
+    let fragment = OrderedMap();
+    fragment = fragment.set(newBlock.key, newBlock);
+    console.log(fragment);
+
+    /*let newContent = Modifier.replaceWithFragment(
+      content,
+      selectionState,
+      fragment
+    );*/
+    //console.log(newContent.getBlockMap().last().getType());
+
+    const newBlockMap = content.getBlockMap().set(anchorKey, newBlock);
+    let newState = EditorState.push(this.state.editorState,
+      ContentState.createFromBlockArray(newBlockMap.toArray()));
+    //let newState = EditorState.push(this.state.editorState, newContent, 'insert-fragment');
+
+    this.onChange(newState);
+    //console.log(content.getFirstBlock());
   }
 
   createState(data) {
-    let {editorState} = this.state;
+    let { editorState } = this.state;
     if (data) {
       let content = null;
       try {
@@ -55,23 +129,20 @@ export default class RichEditor extends React.Component {
   }
 
   componentDidMount() {
-     this.createState(this.props.data);
+    this.createState(this.props.data);
   }
 
-  componentWillReceiveProps(newProps) {
-    this.createState(newProps.data);
-  }
-
-  _onTab(e) {
+  onTab(e) {
     const maxDepth = 4;
     this.onChange(RichUtils.onTab(e, this.state.editorState, maxDepth));
   }
 
-  _toggleBlockType(blockType) {
+  toggleBlockType(blockType) {
     this.onChange(RichUtils.toggleBlockType(this.state.editorState, blockType));
   }
 
-  _toggleInlineStyle(inlineStyle) {
+  toggleInlineStyle(inlineStyle) {
+    console.log("toggle", inlineStyle);
     this.onChange(
       RichUtils.toggleInlineStyle(this.state.editorState, inlineStyle)
     );
@@ -80,8 +151,8 @@ export default class RichEditor extends React.Component {
   render() {
     const { editorState } = this.state;
 
-    if(this.props.readOnly) {
-      return <Editor editorState={editorState} readOnly/>
+    if (this.props.readOnly) {
+      return <Editor editorState={editorState} readOnly />;
     }
 
     return (
@@ -91,6 +162,7 @@ export default class RichEditor extends React.Component {
             editorState={editorState}
             onToggle={this.toggleBlockType}
           />
+          <span onClick={this.addSection}>section</span>
           <InlineStyleControls
             editorState={editorState}
             onToggle={this.toggleInlineStyle}
@@ -100,6 +172,7 @@ export default class RichEditor extends React.Component {
           <Editor
             blockStyleFn={getBlockStyle}
             customStyleMap={styleMap}
+            blockRenderMap={extendedBlockRenderMap}
             editorState={editorState}
             onChange={this.onChange}
             onTab={this.onTab}
@@ -128,7 +201,7 @@ function getBlockStyle(block) {
     case "blockquote":
       return "RichEditor-blockquote";
     default:
-      return null;
+      return 'border-block';
   }
 }
 

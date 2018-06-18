@@ -41,6 +41,7 @@ class Menu extends Component {
               ? "/page/" + menu.item.page_id
               : menu.item.link;
             const isExternalLink = /^https?:\/\//.test(link);
+            
             return isExternalLink ? (
               <a href={link} className="menu-link mr-6">
                 {menu.item.title}
@@ -51,7 +52,7 @@ class Menu extends Component {
               </Link>
             );
           }
-          
+
           return (
             <DropdownMenu menu={menu} />
           );
