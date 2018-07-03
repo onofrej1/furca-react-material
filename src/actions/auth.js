@@ -2,9 +2,10 @@ import axios from "axios";
 import { createBrowserHistory } from "history";
 
 export const login = (email, password) => {
+  console.log(email);
   return (dispatch, getState) => {
     axios
-      .post(getState().baseUrl + "/node/login", {
+      .post(getState().baseUrl + "/login", {
         email,
         password
       })
@@ -18,18 +19,19 @@ export const login = (email, password) => {
             console.log(result.data.user);
           }
         },
-        error => console.log(error)
+        error => console.log('server-error'+error)
       );
   };
 };
 
-export const register = (name, email, password) => {
+export const register = (name, email, password, password_confirmation) => {
   return (dispatch, getState) => {
     axios
-      .post(getState().baseUrl + "/node/register", {
+      .post(getState().baseUrl + "/register", {
         name,
         email,
-        password
+        password,
+        password_confirmation
       })
       .then(
         result => {

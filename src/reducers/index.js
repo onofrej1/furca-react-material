@@ -3,7 +3,8 @@ import { apiUrl, activeResourceName, resource, resourceModel, resourceData, reso
 import { files, activeDirectory } from "./files";
 import { user } from "./auth";
 
-const url = 'http://localhost/web/laravel/public';
+//const url = 'http://localhost/web/laravel/public';
+const url = 'http://localhost:8000';
 const baseUrl = (state = url, action) => {
   return state;
 };

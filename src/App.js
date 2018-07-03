@@ -5,6 +5,9 @@ import { withRouter } from "react-router-dom";
 import Page from "./components/Page";
 import Header from './components/Header';
 import Footer from './components/Footer';
+import Login from './components/Login';
+import Register from './components/Register';
+import Auth from "./components/Authorization";
 
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 
@@ -39,15 +42,15 @@ class App extends Component {
     }
 
     return (
-
         <div>
           <Header menusItem={menuItems} />
             <Switch>
-              <Route path="/page/:id" component={Page} />
+              <Route path="/register" component={Register} />
+              <Route path="/login" component={Login} />
+              <Route path="/page/:id" component={Auth(['ADMIN'])(Page)} />
             </Switch>
           <Footer />
        </div>
-
     );
   }
 }
