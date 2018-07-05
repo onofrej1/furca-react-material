@@ -31,10 +31,6 @@ const article = {
   list: [{ name: "title" }, { name: "author" }]
 };
 
-const menu = {
-  title: "Menu"
-}
-
 const menuItem = {
   title: "Menu items",
   form: [
@@ -80,7 +76,7 @@ const page = {
   title: "Pages",
   form: [
     { label: "Title", help: "Enter title", name: "title", type: "text" },
-    { type: "editor", label: "Body", name: "body" }
+    { type: "rich-editor", label: "Body", name: "body" }
   ],
   list: [
     {
@@ -114,6 +110,36 @@ const tag = {
   list: [{ name: "title", label: "Title" }]
 };
 
-const models = { user, page, tag, article, menuItem, menu, hamburg };
+const role = {
+  title: "Roles",
+  form: [
+    { label: "Title", name: "title", type: "text" },
+    {
+      name: "permissions",
+      type: "checklist",
+      resource: "permission",
+      show: "permission",
+      label: "Permissions"
+    }
+  ],
+  list: [{ name: "title", label: "Title" }]
+};
+
+const permission = {
+  title: "Permissions",
+  form: [{ label: "Permission", name: "permission", type: "text" }],
+  list: [{ name: "permission", label: "Permission" }]
+};
+
+const models = {
+  user,
+  page,
+  tag,
+  article,
+  menuItem,
+  hamburg,
+  role,
+  permission
+};
 
 export default models;

@@ -8,6 +8,7 @@ export const TextField = ({ field, handleChange, handleBlur }) => (
     name={field.name}
     label={field.label || field.name}
     fullWidth
+    InputProps={field.inputProps}
     onChange={handleChange}
     onBlur={handleBlur}
     value={field.value}

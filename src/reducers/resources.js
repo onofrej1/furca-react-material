@@ -1,7 +1,7 @@
 import { url } from "./index.js";
 import Models from "./../Models";
 
-var _ = require('lodash');
+var _ = require("lodash");
 
 export const apiUrl = (state = url, action) => {
   switch (action.type) {
@@ -27,7 +27,7 @@ export const resourceData = (state = {}, action) => {
       return { ...state, [action.name]: action.data };
     case "SET_RESOURCE_ROW":
       let data = state[action.name];
-      let row = data.find(item => item.id === action.row.id);
+      let row = _.find(data, { id: action.row.id });
       if (row) {
         data = data.map(
           item => (item.id === row.id ? { ...item, ...action.row } : item)
@@ -64,12 +64,15 @@ export const resource = (state = {}, action) => {
 export const resourceModel = (state = Models, action) => {
   switch (action.type) {
     case "SET_OPTIONS_DATA":
-    const {resource, name, show} = action.field;
-      const options = action.options.map(option => ({text: option[show], value: option.id}));
+      const { resource, name, show } = action.field;
+      const options = action.options.map(option => ({
+        text: option[show],
+        value: option.id
+      }));
       let resourceObj = state[action.resource];
 
       resourceObj = resourceObj.form.map(field => {
-        if(field.name == name) field.options = options;
+        if (field.name == name) field.options = options;
         return field;
       });
 

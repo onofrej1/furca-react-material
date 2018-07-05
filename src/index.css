@@ -22,6 +22,11 @@ body {
   background-color: red;
 }
 
+.bg-primary {
+  background-color: #2196f3;
+  /*background-color: #3f51b5;*/
+}
+
 .toolbar{
   display:flex;
   flex-flow:row nowrap;

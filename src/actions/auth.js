@@ -1,5 +1,6 @@
 import axios from "axios";
-import { createBrowserHistory } from "history";
+//import { createBrowserHistory } from "history";
+import createHistory from 'history/createBrowserHistory'
 
 export const login = (email, password) => {
   console.log(email);
@@ -16,6 +17,7 @@ export const login = (email, password) => {
           } else {
             localStorage.setItem("token", result.data.token);
             dispatch({ type: "SET_USER", user: result.data.user });
+            createHistory().push('/page/2');
             console.log(result.data.user);
           }
         },
@@ -40,8 +42,7 @@ export const register = (name, email, password, password_confirmation) => {
             alert(result.data.errorMessage);
           } else {
             console.log("registered succesfully");
-            const history = createBrowserHistory();
-            history.push("/login");
+            createHistory().push('/login');
           }
         },
         error => console.log(error)

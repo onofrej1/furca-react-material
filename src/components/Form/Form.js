@@ -6,19 +6,20 @@ import { Formik } from "formik";
 import { TextField } from "./TextField";
 import { ChecklistField } from "./ChecklistField";
 import { RichEditorField } from "./RichEditorField";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
 
 class Form extends Component {
-
   constructor(props) {
     super(props);
 
-    this.state = {values: {}};
+    this.state = { values: {} };
   }
 
   render() {
     const { fields, data = {}, onSubmit, validate } = this.props;
 
-    const Buttons = () => (
+    const DefaultButtons = () => (
       <p className="float-right">
         <Button type="submit" variant="contained" color="primary">
           <DoneIcon className="mr-1" /> Save
@@ -29,13 +30,19 @@ class Form extends Component {
       </p>
     );
 
+    const Buttons = this.props.buttons || DefaultButtons;
+
+    const onEditorChange = (content, fieldName, setFieldValue) => {
+      setFieldValue(fieldName, content);
+    };
+
     const handleCheckboxChange = (event, values) => {
       const value = event.target.value;
       const oldValues = values[event.target.name] || [];
       values[event.target.name] = event.target.checked
         ? [...oldValues, value]
         : oldValues.filter(item => item !== value);
-        this.setState({values: values});
+      this.setState({ values: values });
     };
 
     return (
@@ -65,6 +72,7 @@ class Form extends Component {
                 <form onSubmit={handleSubmit}>
                   {fields.map(field => {
                     let Input = null;
+                    console.log(values);
                     field.value = values[field.name];
 
                     Input = (
@@ -79,7 +87,7 @@ class Form extends Component {
                       Input = (
                         <ChecklistField
                           field={field}
-                          handleChange={(e) => handleCheckboxChange(e, values)}
+                          handleChange={e => handleCheckboxChange(e, values)}
                           values={values}
                         />
                       );
@@ -90,6 +98,17 @@ class Form extends Component {
                         <RichEditorField
                           field={field}
                           setFieldValue={setFieldValue}
+                        />
+                      );
+                    }
+
+                    if (field.type === "rich-editor") {
+                      Input = (
+                        <ReactQuill
+                          value={field.value}
+                          onChange={content =>
+                            onEditorChange(content, field.name, setFieldValue)
+                          }
                         />
                       );
                     }

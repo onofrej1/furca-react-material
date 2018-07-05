@@ -47,15 +47,6 @@ class Resource extends Component {
     this.props.setActiveRow(row);
   }
 
-  handleCheckboxChange = (event, values) => {
-    const value = event.target.value;
-    const oldValues = values[event.target.name] || [];
-    values[event.target.name] = event.target.checked
-      ? [...oldValues, value]
-      : oldValues.filter(item => item !== value);
-    this.props.setActiveRow(values);
-  };
-
   onSubmit(values) {
     this.props.saveResourceData(values);
     this.props.setActiveRow(null);
@@ -124,7 +115,7 @@ const mapStateToProps = (state, ownProps) => {
 
   return {
     activeResourceName: state.activeResourceName,
-    data: state.resourceData[state.activeResourceName],    
+    data: state.resourceData[state.activeResourceName],
     activeRow: state.activeRow,
     resourceModel: resourceModel,
   };
