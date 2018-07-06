@@ -40,10 +40,10 @@ export const setActiveResourceName = name => {
   }
 };
 
-export const fetchResourceData = name => {
+export const fetchResourceData = (name, query = "") => {
   return (dispatch, getState) => {
     let baseUrl = getState().apiUrl;
-    let url = baseUrl + "/" + name;
+    let url = baseUrl + "/" + name + "?"+ query;
 
     axios
       //.get(url, { headers: { 'x-access-token': localStorage.token } })

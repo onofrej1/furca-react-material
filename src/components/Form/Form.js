@@ -8,6 +8,9 @@ import { ChecklistField } from "./ChecklistField";
 import { RichEditorField } from "./RichEditorField";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
+import FormGroup from '@material-ui/core/FormGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Switch from '@material-ui/core/Switch';
 
 class Form extends Component {
   constructor(props) {
@@ -35,6 +38,11 @@ class Form extends Component {
     const onEditorChange = (content, fieldName, setFieldValue) => {
       setFieldValue(fieldName, content);
     };
+
+    const handleSwitchChange = (event, values) => {
+      values[event.target.name] = event.target.checked;
+      this.setState({ values: values });
+    }
 
     const handleCheckboxChange = (event, values) => {
       const value = event.target.value;
@@ -90,6 +98,23 @@ class Form extends Component {
                           handleChange={e => handleCheckboxChange(e, values)}
                           values={values}
                         />
+                      );
+                    }
+
+                    if (field.type === "switch") {
+                      Input = (
+                        <FormGroup row>
+                          <FormControlLabel
+                            control={
+                              <Switch
+                                name={field.name}
+                                checked={field.value}
+                                onChange={e => handleSwitchChange(e, values)}
+                              />
+                            }
+                            label={field.label}
+                          />
+                        </FormGroup>
                       );
                     }
 

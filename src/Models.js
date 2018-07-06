@@ -98,7 +98,7 @@ const hamburg = {
     {
       name: "event_date",
       label: "Event date",
-      render: params => `${params.item.event_date}`
+      render: row => `${row.event_date}`
     },
     { name: "notes", label: "Notes" }
   ]
@@ -131,6 +131,32 @@ const permission = {
   list: [{ name: "permission", label: "Permission" }]
 };
 
+const renderTeaser = row => {
+  let message = row.message;
+  var div = document.createElement("div");
+  div.innerHTML = message;
+  message = div.innerText;
+
+  if (message.length > 70) {
+    message = message.substr(0, 70) + "...";
+  }
+
+  return message;
+};
+
+const news = {
+  title: "Messages",
+  form: [
+    { label: "Message", name: "message", type: "rich-editor" },
+    { label: "Created", name: "created_at", type: "date" },
+    { label: "Published", name: "published", type: "switch"}
+  ],
+  list: [
+    { name: "message", label: "Message", render: renderTeaser },
+    { name: "created_at", label: "Created at" }
+  ]
+};
+
 const models = {
   user,
   page,
@@ -139,7 +165,8 @@ const models = {
   menuItem,
   hamburg,
   role,
-  permission
+  permission,
+  news
 };
 
 export default models;
