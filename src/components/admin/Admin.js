@@ -56,7 +56,7 @@ class Admin extends Component {
         <Header />
         <Grid container>
           <Grid item xs={2}>
-            <div className="nav-wrapper">
+            <div className="nav-wrapper" style={{backgroundColor:'#ecf0f5'}}>
               <List component="nav">
                 <ListItem button>
                   <ListItemText primary="Select table" />

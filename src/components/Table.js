@@ -26,6 +26,11 @@ export default class Table extends Component {
     this.setState({ rowsPerPage: event.target.value });
   };
 
+  componentWillReceiveProps(newProps)
+  {
+      //todo
+  }
+
   render() {
     const { data = [], fields, editAction } = this.props;
     const { page, rowsPerPage } = this.state;
@@ -39,7 +44,7 @@ export default class Table extends Component {
             {fields.map(field => {
               return <TableCell key={field.name}>{field.name}</TableCell>;
             })}
-            <TableCell>Action</TableCell>
+            {editAction && <TableCell>Action</TableCell>}
           </TableRow>
         </TableHead>
         <TableBody>

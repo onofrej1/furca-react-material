@@ -17,7 +17,8 @@ class Page extends Component {
 
     return (
       <SidebarLayout contentTitle={page.title}>
-        <RichEditor data={page.body} readOnly />
+        {/*<RichEditor data={page.body} readOnly />*/}
+        <div dangerouslySetInnerHTML={{__html:page.body}} />
       </SidebarLayout>
     );
   }

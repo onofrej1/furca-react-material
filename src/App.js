@@ -7,6 +7,8 @@ import Footer from './components/Footer';
 import Login from './components/Login';
 import Register from './components/Register';
 import Auth from "./components/Authorization";
+import Results from './components/Results';
+import Hamburg from './components/Hamburg';
 
 class App extends Component {
   render() {
@@ -27,7 +29,9 @@ class App extends Component {
             <Switch>
               <Route path="/register" component={Register} />
               <Route path="/login" component={Login} />
-              <Route path="/page/:id" component={Auth(['ADMIN'])(Page)} />
+              <Route path="/page/:id" component={Page} />
+              <Route path="/vysledky" component={Results} />
+              <Route path="/hamburg" component={Hamburg} />
             </Switch>
           <Footer />
        </div>
