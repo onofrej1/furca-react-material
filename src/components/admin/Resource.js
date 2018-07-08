@@ -6,6 +6,9 @@ import AddIcon from "@material-ui/icons/Add";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
+import Card from "@material-ui/core/Card";
+import CardContent from "@material-ui/core/CardContent";
+import CardHeader from "@material-ui/core/CardHeader";
 import Table from "./../Table";
 import Form from "./../Form/Form";
 import {
@@ -26,7 +29,9 @@ class Resource extends Component {
   }
 
   componentDidMount() {
-    const { match: { params } } = this.props;
+    const {
+      match: { params }
+    } = this.props;
     this.setResource(params.resource);
   }
 
@@ -48,7 +53,7 @@ class Resource extends Component {
   }
 
   onSubmit(values) {
-    this.props.saveResourceData(values);
+    this.props.saveResourceData(this.props.activeResourceName, values);
     this.props.setActiveRow(null);
   }
 
@@ -67,17 +72,22 @@ class Resource extends Component {
           <Grid item xs />
           <Grid item xs={activeRow ? 6 : 12}>
             {activeRow && (
-              <Paper className="p-4">
+              <Card className="mb-4">
                 {/* <div class="bg-white border-b-2 py-2 px-1" elevation="8">
                 <h3><EditIcon /> {this.props.activeResourceName}</h3>
               </div>*/}
-                <h3 className="mb-3">Add/Edit {activeResourceName}</h3>
-                <Form
-                  fields={resourceModel.form}
-                  data={activeRow}
-                  onSubmit={this.onSubmit}
+                <CardHeader
+                  classes={{ root: "bg-secondary", title: "color-white" }}
+                  title="Add/Edit record"
                 />
-              </Paper>
+                <CardContent>
+                  <Form
+                    fields={resourceModel.form}
+                    data={activeRow}
+                    onSubmit={this.onSubmit}
+                  />
+                </CardContent>
+              </Card>
             )}
 
             {!activeRow && (
@@ -99,7 +109,11 @@ class Resource extends Component {
                   name="search"
                   label="Search"
                 />
-                <Table data={data} fields={resourceModel.list} editAction={this.edit} />
+                <Table
+                  data={data}
+                  fields={resourceModel.list}
+                  editAction={this.edit}
+                />
               </Paper>
             )}
           </Grid>
@@ -111,19 +125,24 @@ class Resource extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  let resourceModel = state.activeResourceName ? state.resourceModel[state.activeResourceName] : {};
+  let resourceModel = state.activeResourceName
+    ? state.resourceModel[state.activeResourceName]
+    : {};
 
   return {
     activeResourceName: state.activeResourceName,
     data: state.resourceData[state.activeResourceName],
     activeRow: state.activeRow,
-    resourceModel: resourceModel,
+    resourceModel: resourceModel
   };
 };
 
-export default connect(mapStateToProps, {
-  setActiveResourceName,
-  fetchResourceData,
-  setActiveRow,
-  saveResourceData,
-})(Resource);
+export default connect(
+  mapStateToProps,
+  {
+    setActiveResourceName,
+    fetchResourceData,
+    setActiveRow,
+    saveResourceData
+  }
+)(Resource);

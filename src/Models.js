@@ -110,6 +110,16 @@ const tag = {
   list: [{ name: "title", label: "Title" }]
 };
 
+const guestbook = {
+  title: "Tags",
+  form: [
+    { label: "Name", name: "name", type: "text" },
+    { label: "Email", name: "email", type: "text" },
+    { label: "Message", name: "message", type: "textarea" }
+  ],
+  list: [{ name: "name", label: "Name" }, { label: "email", name: "email" }]
+};
+
 const role = {
   title: "Roles",
   form: [
@@ -149,7 +159,7 @@ const news = {
   form: [
     { label: "Message", name: "message", type: "rich-editor" },
     { label: "Created", name: "created_at", type: "date" },
-    { label: "Published", name: "published", type: "switch"}
+    { label: "Published", name: "published", type: "switch" }
   ],
   list: [
     { name: "message", label: "Message", render: renderTeaser },
@@ -166,7 +176,8 @@ const models = {
   hamburg,
   role,
   permission,
-  news
+  news,
+  guestbook
 };
 
 export default models;

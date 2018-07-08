@@ -9,6 +9,7 @@ import Register from './components/Register';
 import Auth from "./components/Authorization";
 import Results from './components/Results';
 import Hamburg from './components/Hamburg';
+import Guestbook from './components/Guestbook';
 
 class App extends Component {
   render() {
@@ -32,6 +33,7 @@ class App extends Component {
               <Route path="/page/:id" component={Page} />
               <Route path="/vysledky" component={Results} />
               <Route path="/hamburg" component={Hamburg} />
+              <Route path="/guestbook" component={Guestbook} />
             </Switch>
           <Footer />
        </div>

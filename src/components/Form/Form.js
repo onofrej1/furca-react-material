@@ -8,9 +8,12 @@ import { ChecklistField } from "./ChecklistField";
 import { RichEditorField } from "./RichEditorField";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
-import FormGroup from '@material-ui/core/FormGroup';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Switch from '@material-ui/core/Switch';
+import FormGroup from "@material-ui/core/FormGroup";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import Switch from "@material-ui/core/Switch";
+import axios from "axios";
+
+var Recaptcha = require("react-recaptcha");
 
 class Form extends Component {
   constructor(props) {
@@ -42,7 +45,7 @@ class Form extends Component {
     const handleSwitchChange = (event, values) => {
       values[event.target.name] = event.target.checked;
       this.setState({ values: values });
-    }
+    };
 
     const handleCheckboxChange = (event, values) => {
       const value = event.target.value;
@@ -51,6 +54,22 @@ class Form extends Component {
         ? [...oldValues, value]
         : oldValues.filter(item => item !== value);
       this.setState({ values: values });
+    };
+
+    var verifyCallback = async function (response) {
+      console.log(response);
+
+      axios.get('http://localhost:8000/verify-captcha?response='+response).then(
+        result => {
+          if(result.data.success) {
+            console.log('success');
+          } else {
+            console.log('not sucess');
+          }
+
+        },
+        error => console.log(error)
+      );
     };
 
     return (
@@ -80,7 +99,7 @@ class Form extends Component {
                 <form onSubmit={handleSubmit}>
                   {fields.map(field => {
                     let Input = null;
-                    console.log(values);
+                    console.log(field);
                     field.value = values[field.name];
 
                     Input = (
@@ -88,6 +107,7 @@ class Form extends Component {
                         field={field}
                         handleChange={handleChange}
                         handleBlur={handleBlur}
+                        className={field.className}
                       />
                     );
 
@@ -139,7 +159,7 @@ class Form extends Component {
                     }
 
                     return (
-                      <div className="mb-8" key={field.name}>
+                      <div className={field.wrapper+" mb-8"} key={field.name}>
                         {Input}
                         {touched[field.name] &&
                           errors[field.name] && <div>{errors[field.name]}</div>}
@@ -147,6 +167,8 @@ class Form extends Component {
                     );
                   })}
 
+                  {/*<Recaptcha verifyCallback={verifyCallback} sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI" />
+                  */}
                   <Buttons />
                   <div className="clearfix" />
                 </form>

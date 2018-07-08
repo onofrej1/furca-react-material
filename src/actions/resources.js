@@ -91,10 +91,9 @@ export const deleteResourceRow = row => {
   };
 };
 
-export const saveResourceData = data => {
+export const saveResourceData = (resourceName, data) => {
   return (dispatch, getState) => {
     let urlParam = data.id ? "/" + data.id : "";
-    let resourceName = getState().activeResourceName;
 
     axios({
       method: data.id ? "put" : "post",
