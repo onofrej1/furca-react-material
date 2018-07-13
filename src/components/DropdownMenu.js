@@ -53,7 +53,7 @@ class DropdownMenu extends Component {
             </Button>
           </span>
         </Target>
-        <Popper placement="bottom-start" eventsEnabled={open}>
+        <Popper placement="bottom-start" eventsEnabled={open} >
           <ClickAwayListener onClickAway={this.handleClose}>
             <Grow in={open} style={{ transformOrigin: "0 0 0" }}>
               <Paper>

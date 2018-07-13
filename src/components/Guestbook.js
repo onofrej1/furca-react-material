@@ -14,6 +14,7 @@ import CardContent from "@material-ui/core/CardContent";
 import CardHeader from "@material-ui/core/CardHeader";
 import Avatar from "@material-ui/core/Avatar";
 import Chip from "@material-ui/core/Chip";
+import SlateEditor from "./SlateEditor";
 
 import SidebarLayout from "./SidebarLayout";
 
@@ -114,6 +115,10 @@ class Guestbook extends Component {
               title="Contact form"
             />
             <CardContent>
+              <SlateEditor  />
+
+             <br/>
+
               {this.state.form && (
                 <Form
                   fields={fields}

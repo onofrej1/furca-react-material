@@ -4,7 +4,7 @@ import { files, activeDirectory } from "./files";
 import { user } from "./auth";
 
 //const url = 'http://localhost/web/laravel/public';
-const url = 'http://localhost:8000';
+const url = 'http://nessbox.local:8001';
 const baseUrl = (state = url, action) => {
   return state;
 };
