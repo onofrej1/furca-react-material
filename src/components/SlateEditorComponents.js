@@ -5,8 +5,8 @@ export const Button = styled('span')`
   cursor: pointer;
   color: ${props =>
     props.reversed
-      ? props.active ? 'white' : '#aaa'
-      : props.active ? 'black' : '#ccc'};
+      ? props.active ? 'red' : 'black'
+      : props.active ? 'red' : 'black'};
 `
 
 export const Icon = styled(({ className, ...rest }) => {

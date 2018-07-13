@@ -53,6 +53,7 @@ class Resource extends Component {
   }
 
   onSubmit(values) {
+    console.log(values);
     this.props.saveResourceData(this.props.activeResourceName, values);
     this.props.setActiveRow(null);
   }

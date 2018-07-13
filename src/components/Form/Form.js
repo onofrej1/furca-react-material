@@ -150,7 +150,7 @@ class Form extends Component {
 
                     if (field.type === "rich-editor") {
                       Input = (
-                        <SlateEditor value={field.value} setFieldValue={setFieldValue}  />
+                        <SlateEditor field={field} setFieldValue={setFieldValue}  />
                       )
                       /*Input = (
                         <ReactQuill
