@@ -69,7 +69,7 @@ class Resource extends Component {
 
     return (
       <Admin>
-        <Grid container>
+        <Grid container spacing={24}>
           <Grid item xs />
           <Grid item xs={activeRow ? 6 : 12}>
             {activeRow && (

@@ -8,6 +8,15 @@ import { Button, Icon, Toolbar } from "./SlateEditorComponents";
 import Html from "slate-html-serializer";
 import Modal from "react-modal";
 import AppBar from "@material-ui/core/AppBar";
+import { fetchFiles } from "./../actions";
+import { connect } from "react-redux";
+import Card from "@material-ui/core/Card";
+import CardActions from "@material-ui/core/CardActions";
+import CardContent from "@material-ui/core/CardContent";
+import CardMedia from "@material-ui/core/CardMedia";
+import Typography from "@material-ui/core/Typography";
+import Grid from "@material-ui/core/Grid";
+import "./../assets/css/thumbnails.css";
 
 /**
  * Define the default node type.
@@ -64,7 +73,14 @@ class SlateEditor extends React.Component {
     this.openModal = this.openModal.bind(this);
     this.afterOpenModal = this.afterOpenModal.bind(this);
     this.closeModal = this.closeModal.bind(this);
+    this.chooseFile = this.chooseFile.bind(this);
     //console.log(this.state.value);
+  }
+
+  chooseFile(filePath) {
+    const change = this.state.value.change().call(this.insertImage, filePath);
+    this.onChange(change);
+    this.setState({ modalIsOpen: false });
   }
 
   openModal() {
@@ -122,6 +138,8 @@ class SlateEditor extends React.Component {
    */
 
   render() {
+    console.log("files", this.props.files);
+
     return (
       <div>
         <Toolbar>
@@ -156,16 +174,46 @@ class SlateEditor extends React.Component {
           onAfterOpen={this.afterOpenModal}
           onRequestClose={this.closeModal}
           style={{
-            overlay: {  },
-            content: { width: "50%", margin: "auto", padding: 0 }
+            overlay: {},
+            content: { width: "80%", margin: "auto", padding: 0 }
           }}
           contentLabel="Example Modal"
         >
-          <AppBar position="static" style={{padding: 10}}>
+          <AppBar position="static" style={{ padding: 10 }}>
             <h4>modal content</h4>
           </AppBar>
+          <Grid
+            container
+            spacing={16}
+            className="p-4"
+            alignItems="center"
+          >
+            {this.props.files.map(file => {
+              let src = this.props.baseUrl + "/"+file.path;
+              return (
+                <Grid item >
+                  <div className="thumbnail">
+                    {file.type == 'dir' && <img
+                      src={this.props.baseUrl + "/obrazky/folder.png"}
+                      className={file.isPortrait ? 'portrait': ''}
+                    />}
+                    {file.type != 'dir' && file.isImage && <img
+                      src={src}
+                      className={file.isPortrait ? 'portrait': ''}
+                      onClick={() => this.chooseFile(src)}
+                    />}
+                    {file.type != 'dir' && !file.isImage && <img
+                      src={this.props.baseUrl + "/obrazky/no_preview.jpg"}
+                      className={file.isPortrait ? 'portrait': ''}
+                      onClick={() => this.chooseFile(src)}
+                    />}
 
-          
+                  </div>
+                  <div className="text-center border border-gray p-2">{file.name}</div>
+                </Grid>
+              );
+            })}
+          </Grid>
         </Modal>
       </div>
     );
@@ -178,9 +226,8 @@ class SlateEditor extends React.Component {
     //const src = window.prompt('Enter the URL of the image:')
     //if (!src) return
 
-    const change = this.state.value.change().call(this.insertImage, src);
-
-    this.onChange(change);
+    //const change = this.state.value.change().call(this.insertImage, src);
+    //this.onChange(change);
   };
 
   /**
@@ -393,10 +440,28 @@ class SlateEditor extends React.Component {
 
     this.onChange(change);
   };
+
+  componentDidMount() {
+    this.props.fetchFiles("obrazky");
+  }
 }
 
 /**
  * Export.
  */
 
-export default SlateEditor;
+const mapStateToProps = (state, ownProps) => {
+  let files = state.files || [];
+
+  return {
+    baseUrl: state.baseUrl,
+    files
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  {
+    fetchFiles
+  }
+)(SlateEditor);
