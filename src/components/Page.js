@@ -1,10 +1,16 @@
 import React, { Component } from "react";
-import RichEditor from "./Form/RichEditor";
 import SidebarLayout from "./SidebarLayout";
+import Html from "slate-html-serializer";
 import { fetchResourceData } from "./../actions";
 import { connect } from "react-redux";
+import SlateEditor from "./Slate/SlateEditor";
 
 class Page extends Component {
+
+  constructor(props) {
+    super(props);
+  }
+
   componentDidMount() {
     this.props.fetchResourceData("page");
   }
@@ -18,7 +24,7 @@ class Page extends Component {
     return (
       <SidebarLayout contentTitle={page.title}>
         {/*<RichEditor data={page.body} readOnly />*/}
-        <div dangerouslySetInnerHTML={{__html:page.body}} />
+        <SlateEditor readOnly value={page.body} setValue={() => {}} />
       </SidebarLayout>
     );
   }

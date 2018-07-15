@@ -64,6 +64,14 @@ button {
   min-height: 1000px;
 }
 
+.img-bordered {
+  padding: .25rem;
+  background-color: #fff;
+  border: 1px solid #dee2e6;
+  border-radius: .25rem;
+  width: 100%;
+}
+
 .box-heading {
   color: #fff;
   background-image: linear-gradient(to bottom,#3c3c3c 0,#222 100%) !important;

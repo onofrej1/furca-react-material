@@ -71,7 +71,7 @@ class Resource extends Component {
       <Admin>
         <Grid container spacing={24}>
           <Grid item xs />
-          <Grid item xs={activeRow ? 6 : 12}>
+          <Grid item xs={activeRow ? 8 : 12}>
             {activeRow && (
               <Card className="mb-4">
                 {/* <div class="bg-white border-b-2 py-2 px-1" elevation="8">

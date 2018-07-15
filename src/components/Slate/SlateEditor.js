@@ -1,98 +1,59 @@
+import React, { Component } from "react";
 import { Editor } from "slate-react";
 import { Value } from "slate";
-
-import React from "react";
 import initialValue from "./value.json";
 import { isKeyHotkey } from "is-hotkey";
 import { Button, Icon, Toolbar } from "./SlateEditorComponents";
 import Html from "slate-html-serializer";
-import Modal from "react-modal";
-import AppBar from "@material-ui/core/AppBar";
-import { fetchFiles } from "./../actions";
 import { connect } from "react-redux";
 import Card from "@material-ui/core/Card";
 import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
 import CardMedia from "@material-ui/core/CardMedia";
 import Typography from "@material-ui/core/Typography";
-import Grid from "@material-ui/core/Grid";
-import "./../assets/css/thumbnails.css";
-
-/**
- * Define the default node type.
- *
- * @type {String}
- */
+import FileList from "./FileList";
+import "./../../assets/css/thumbnails.css";
 
 const DEFAULT_NODE = "paragraph";
 
 /**
- * Define hotkey matchers.
- *
- * @type {Function}
- */
-
-const isBoldHotkey = isKeyHotkey("mod+b");
-const isItalicHotkey = isKeyHotkey("mod+i");
-const isUnderlinedHotkey = isKeyHotkey("mod+u");
-const isCodeHotkey = isKeyHotkey("mod+`");
-
-/**
- * The rich text example.
  * Source: https://github.com/ianstormtaylor/slate/blob/master/examples/rich-text/index.js
- *
- * @type {Component}
  */
-
 class SlateEditor extends React.Component {
-  /**
-   * Deserialize the initial editor value.
-   *
-   * @type {Object}
-   */
-
   constructor(props) {
-    const html = new Html({});
-
     super(props);
-    let value = "";
-
-    try {
-      value = JSON.parse(props.field.value);
-    } catch (e) {
-      value = html.deserialize(props.field.value);
-    }
-
-    console.log(props.field.value);
 
     this.state = {
-      value: Value.fromJSON(value),
+      value: Value.fromJSON(this.parseValue(props.value)),
       modalIsOpen: false
     };
 
-    this.openModal = this.openModal.bind(this);
-    this.afterOpenModal = this.afterOpenModal.bind(this);
-    this.closeModal = this.closeModal.bind(this);
     this.chooseFile = this.chooseFile.bind(this);
-    //console.log(this.state.value);
+  }
+
+  componentWillReceiveProps(props) {
+    this.setState({
+      value: Value.fromJSON(this.parseValue(props.value)),
+      modalIsOpen: false
+    });
+  }
+
+  parseValue(value) {
+    const html = new Html({});
+    let parsedValue = "";
+
+    try {
+      parsedValue = JSON.parse(value);
+    } catch (e) {
+      parsedValue = html.deserialize(value);
+    }
+    return parsedValue;
   }
 
   chooseFile(filePath) {
+    this.setState({ modalIsOpen: false });
     const change = this.state.value.change().call(this.insertImage, filePath);
     this.onChange(change);
-    this.setState({ modalIsOpen: false });
-  }
-
-  openModal() {
-    this.setState({ modalIsOpen: true });
-  }
-
-  afterOpenModal() {
-    // references are now sync'd and can be accessed.
-  }
-
-  closeModal() {
-    this.setState({ modalIsOpen: false });
   }
 
   insertImage = (change, src, target) => {
@@ -103,42 +64,31 @@ class SlateEditor extends React.Component {
     change.insertBlock({
       type: "image",
       isVoid: true,
-      data: { src }
+      data: { src, className: "img-bordered" }
     });
   };
-
-  /**
-   * Check if the current selection has a mark with `type` in it.
-   *
-   * @param {String} type
-   * @return {Boolean}
-   */
 
   hasMark = type => {
     const { value } = this.state;
     return value.activeMarks.some(mark => mark.type == type);
   };
 
-  /**
-   * Check if the any of the currently selected blocks are of `type`.
-   *
-   * @param {String} type
-   * @return {Boolean}
-   */
-
   hasBlock = type => {
     const { value } = this.state;
     return value.blocks.some(node => node.type == type);
   };
 
-  /**
-   * Render.
-   *
-   * @return {Element}
-   */
-
   render() {
-    console.log("files", this.props.files);
+    if (this.props.readOnly) {
+      return (
+        <Editor
+          spellCheck={false}
+          value={this.state.value}
+          renderNode={this.renderNode}
+          renderMark={this.renderMark}
+        />
+      );
+    }
 
     return (
       <div>
@@ -159,62 +109,18 @@ class SlateEditor extends React.Component {
           </Button>
         </Toolbar>
         <Editor
-          spellCheck
+          spellCheck={false}
           autoFocus
-          placeholder="Enter some rich text..."
           value={this.state.value}
           onChange={this.onChange}
-          onKeyDown={this.onKeyDown}
           renderNode={this.renderNode}
           renderMark={this.renderMark}
         />
 
-        <Modal
-          isOpen={this.state.modalIsOpen}
-          onAfterOpen={this.afterOpenModal}
-          onRequestClose={this.closeModal}
-          style={{
-            overlay: {},
-            content: { width: "80%", margin: "auto", padding: 0 }
-          }}
-          contentLabel="Example Modal"
-        >
-          <AppBar position="static" style={{ padding: 10 }}>
-            <h4>modal content</h4>
-          </AppBar>
-          <Grid
-            container
-            spacing={16}
-            className="p-4"
-            alignItems="center"
-          >
-            {this.props.files.map(file => {
-              let src = this.props.baseUrl + "/"+file.path;
-              return (
-                <Grid item >
-                  <div className="thumbnail">
-                    {file.type == 'dir' && <img
-                      src={this.props.baseUrl + "/obrazky/folder.png"}
-                      className={file.isPortrait ? 'portrait': ''}
-                    />}
-                    {file.type != 'dir' && file.isImage && <img
-                      src={src}
-                      className={file.isPortrait ? 'portrait': ''}
-                      onClick={() => this.chooseFile(src)}
-                    />}
-                    {file.type != 'dir' && !file.isImage && <img
-                      src={this.props.baseUrl + "/obrazky/no_preview.jpg"}
-                      className={file.isPortrait ? 'portrait': ''}
-                      onClick={() => this.chooseFile(src)}
-                    />}
-
-                  </div>
-                  <div className="text-center border border-gray p-2">{file.name}</div>
-                </Grid>
-              );
-            })}
-          </Grid>
-        </Modal>
+        <FileList
+          modalIsOpen={this.state.modalIsOpen}
+          chooseFile={this.chooseFile}
+        />
       </div>
     );
   }
@@ -222,21 +128,7 @@ class SlateEditor extends React.Component {
   onClickImage = event => {
     event.preventDefault();
     this.setState({ modalIsOpen: true });
-    const src = "";
-    //const src = window.prompt('Enter the URL of the image:')
-    //if (!src) return
-
-    //const change = this.state.value.change().call(this.insertImage, src);
-    //this.onChange(change);
   };
-
-  /**
-   * Render a mark-toggling toolbar button.
-   *
-   * @param {String} type
-   * @param {String} icon
-   * @return {Element}
-   */
 
   renderMarkButton = (type, icon) => {
     const isActive = this.hasMark(type);
@@ -250,14 +142,6 @@ class SlateEditor extends React.Component {
       </Button>
     );
   };
-
-  /**
-   * Render a block-toggling toolbar button.
-   *
-   * @param {String} type
-   * @param {String} icon
-   * @return {Element}
-   */
 
   renderBlockButton = (type, icon) => {
     let isActive = this.hasBlock(type);
@@ -277,13 +161,6 @@ class SlateEditor extends React.Component {
       </Button>
     );
   };
-
-  /**
-   * Render a Slate node.
-   *
-   * @param {Object} props
-   * @return {Element}
-   */
 
   renderNode = props => {
     const { attributes, children, node } = props;
@@ -307,16 +184,10 @@ class SlateEditor extends React.Component {
         return <ol {...attributes}>{children}</ol>;
       case "image":
         const src = node.data.get("src");
-        return <img src={src} {...attributes} />;
+        const className = node.data.get("className");
+        return <img src={src} className={className} {...attributes} />;
     }
   };
-
-  /**
-   * Render a Slate mark.
-   *
-   * @param {Object} props
-   * @return {Element}
-   */
 
   renderMark = props => {
     const { children, mark, attributes } = props;
@@ -333,54 +204,11 @@ class SlateEditor extends React.Component {
     }
   };
 
-  /**
-   * On change, save the new `value`.
-   *
-   * @param {Change} change
-   */
-
   onChange = ({ value }) => {
-    this.props.setFieldValue(
-      this.props.field.name,
-      JSON.stringify(value.toJSON())
-    );
+    console.log("on change");
+    this.props.setValue(this.props.name, JSON.stringify(value.toJSON()));
     this.setState({ value });
   };
-
-  /**
-   * On key down, if it's a formatting command toggle a mark.
-   *
-   * @param {Event} event
-   * @param {Change} change
-   * @return {Change}
-   */
-
-  onKeyDown = (event, change) => {
-    let mark;
-
-    if (isBoldHotkey(event)) {
-      mark = "bold";
-    } else if (isItalicHotkey(event)) {
-      mark = "italic";
-    } else if (isUnderlinedHotkey(event)) {
-      mark = "underlined";
-    } else if (isCodeHotkey(event)) {
-      mark = "code";
-    } else {
-      return;
-    }
-
-    event.preventDefault();
-    change.toggleMark(mark);
-    return true;
-  };
-
-  /**
-   * When a mark button is clicked, toggle the current mark.
-   *
-   * @param {Event} event
-   * @param {String} type
-   */
 
   onClickMark = (event, type) => {
     event.preventDefault();
@@ -388,13 +216,6 @@ class SlateEditor extends React.Component {
     const change = value.change().toggleMark(type);
     this.onChange(change);
   };
-
-  /**
-   * When a block button is clicked, toggle the block type.
-   *
-   * @param {Event} event
-   * @param {String} type
-   */
 
   onClickBlock = (event, type) => {
     event.preventDefault();
@@ -440,28 +261,13 @@ class SlateEditor extends React.Component {
 
     this.onChange(change);
   };
-
-  componentDidMount() {
-    this.props.fetchFiles("obrazky");
-  }
 }
 
-/**
- * Export.
- */
-
 const mapStateToProps = (state, ownProps) => {
-  let files = state.files || [];
-
-  return {
-    baseUrl: state.baseUrl,
-    files
-  };
+  return {};
 };
 
 export default connect(
   mapStateToProps,
-  {
-    fetchFiles
-  }
+  {}
 )(SlateEditor);

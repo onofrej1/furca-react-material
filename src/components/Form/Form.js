@@ -12,7 +12,7 @@ import FormGroup from "@material-ui/core/FormGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
 import axios from "axios";
-import SlateEditor from "./../SlateEditor";
+import SlateEditor from "./../Slate/SlateEditor";
 
 var Recaptcha = require("react-recaptcha");
 
@@ -139,18 +139,18 @@ class Form extends Component {
                       );
                     }
 
-                    if (field.type === "editor") {
+                    /*if (field.type === "editor") {
                       Input = (
                         <RichEditorField
                           field={field}
                           setFieldValue={setFieldValue}
                         />
                       );
-                    }
+                    }*/
 
                     if (field.type === "rich-editor") {
                       Input = (
-                        <SlateEditor field={field} setFieldValue={setFieldValue}  />
+                        <SlateEditor name={field.name} value={field.value} setValue={setFieldValue}  />
                       )
                       /*Input = (
                         <ReactQuill
