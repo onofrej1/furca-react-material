@@ -100,7 +100,7 @@ class Form extends Component {
                 <form onSubmit={handleSubmit}>
                   {fields.map(field => {
                     let Input = null;
-                    console.log(field);
+                    //console.log(field);
                     field.value = values[field.name];
 
                     Input = (

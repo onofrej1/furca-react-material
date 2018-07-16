@@ -9,40 +9,225 @@
             "object": "text",
             "leaves": [
               {
-                "text": "This is editable "
-              },
+                "text":
+                  "Since the editor is based on a recursive tree model, similar to an HTML document, you can create complex nested structures, like tables:"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "object": "block",
+        "type": "table",
+        "nodes": [
+          {
+            "object": "block",
+            "type": "table-row",
+            "nodes": [
               {
-                "text": "rich",
-                "marks": [
+                "object": "block",
+                "type": "table-cell",
+                "nodes": [
                   {
-                    "type": "bold"
+                    "object": "text",
+                    "leaves": [
+                      {
+                        "text": ""
+                      }
+                    ]
                   }
                 ]
               },
               {
-                "text": " text, "
-              },
-              {
-                "text": "much",
-                "marks": [
+                "object": "block",
+                "type": "table-cell",
+                "nodes": [
                   {
-                    "type": "italic"
+                    "object": "text",
+                    "leaves": [
+                      {
+                        "text": "Human",
+                        "marks": [
+                          {
+                            "type": "bold"
+                          }
+                        ]
+                      }
+                    ]
                   }
                 ]
               },
               {
-                "text": " better than a "
-              },
-              {
-                "text": "<textarea>",
-                "marks": [
+                "object": "block",
+                "type": "table-cell",
+                "nodes": [
                   {
-                    "type": "code"
+                    "object": "text",
+                    "leaves": [
+                      {
+                        "text": "Dog",
+                        "marks": [
+                          {
+                            "type": "bold"
+                          }
+                        ]
+                      }
+                    ]
                   }
                 ]
               },
               {
-                "text": "!"
+                "object": "block",
+                "type": "table-cell",
+                "nodes": [
+                  {
+                    "object": "text",
+                    "leaves": [
+                      {
+                        "text": "Cat",
+                        "marks": [
+                          {
+                            "type": "bold"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "object": "block",
+            "type": "table-row",
+            "nodes": [
+              {
+                "object": "block",
+                "type": "table-cell",
+                "nodes": [
+                  {
+                    "object": "text",
+                    "leaves": [
+                      {
+                        "text": "# of Feet",
+                        "marks": [
+                          {
+                            "type": "bold"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "object": "block",
+                "type": "table-cell",
+                "nodes": [
+                  {
+                    "object": "text",
+                    "leaves": [
+                      {
+                        "text": "2"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "object": "block",
+                "type": "table-cell",
+                "nodes": [
+                  {
+                    "object": "text",
+                    "leaves": [
+                      {
+                        "text": "4"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "object": "block",
+                "type": "table-cell",
+                "nodes": [
+                  {
+                    "object": "text",
+                    "leaves": [
+                      {
+                        "text": "4"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "object": "block",
+            "type": "table-row",
+            "nodes": [
+              {
+                "object": "block",
+                "type": "table-cell",
+                "nodes": [
+                  {
+                    "object": "text",
+                    "leaves": [
+                      {
+                        "text": "# of Lives",
+                        "marks": [
+                          {
+                            "type": "bold"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "object": "block",
+                "type": "table-cell",
+                "nodes": [
+                  {
+                    "object": "text",
+                    "leaves": [
+                      {
+                        "text": "1"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "object": "block",
+                "type": "table-cell",
+                "nodes": [
+                  {
+                    "object": "text",
+                    "leaves": [
+                      {
+                        "text": "1"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "object": "block",
+                "type": "table-cell",
+                "nodes": [
+                  {
+                    "object": "text",
+                    "leaves": [
+                      {
+                        "text": "9"
+                      }
+                    ]
+                  }
+                ]
               }
             ]
           }
@@ -57,47 +242,7 @@
             "leaves": [
               {
                 "text":
-                  "Since it's rich text, you can do things like turn a selection of text "
-              },
-              {
-                "text": "bold",
-                "marks": [
-                  {
-                    "type": "bold"
-                  }
-                ]
-              },
-              {
-                "text":
-                  ", or add a semantically rendered block quote in the middle of the page, like this:"
-              }
-            ]
-          }
-        ]
-      },
-      {
-        "object": "block",
-        "type": "block-quote",
-        "nodes": [
-          {
-            "object": "text",
-            "leaves": [
-              {
-                "text": "A wise quote."
-              }
-            ]
-          }
-        ]
-      },
-      {
-        "object": "block",
-        "type": "paragraph",
-        "nodes": [
-          {
-            "object": "text",
-            "leaves": [
-              {
-                "text": "Try it out for yourself!"
+                  "This table is just a basic example of rendering a table, and it doesn't have fancy functionality. But you could augment it to add support for navigating with arrow keys, displaying table headers, adding column and rows, or even formulas if you wanted to get really crazy!"
               }
             ]
           }

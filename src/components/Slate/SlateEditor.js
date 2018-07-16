@@ -12,6 +12,7 @@ import CardContent from "@material-ui/core/CardContent";
 import CardMedia from "@material-ui/core/CardMedia";
 import Typography from "@material-ui/core/Typography";
 import FileList from "./FileList";
+import { Block } from 'slate';
 import "./../../assets/css/thumbnails.css";
 
 const DEFAULT_NODE = "paragraph";
@@ -107,6 +108,12 @@ class SlateEditor extends React.Component {
           <Button onMouseDown={this.onClickImage}>
             <Icon>image</Icon>
           </Button>
+          <Button onMouseDown={this.addTable}>
+            <Icon>table</Icon>
+          </Button>
+          <Button onMouseDown={this.addRow}>
+            <Icon>image</Icon>
+          </Button>
         </Toolbar>
         <Editor
           spellCheck={false}
@@ -128,6 +135,64 @@ class SlateEditor extends React.Component {
   onClickImage = event => {
     event.preventDefault();
     this.setState({ modalIsOpen: true });
+  };
+
+  addRow = event => {
+    const value = this.state.value;
+    console.log(value.blocks.get(0));
+  }
+
+  addTable = event => {
+    event.preventDefault();
+    const value = this.state.value;
+    const change = value.change();
+    console.log("add table");
+    //change.insertText("abc");
+    console.log(value.blocks.get(0));
+
+    let nodes = [
+      {
+        object: "block",
+        type: "table-row",
+        nodes: [
+          {
+            object: "block",
+            type: "table-cell",
+            nodes: [
+              {
+                object: "text",
+                leaves: [
+                  {
+                    text: "abcde"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            object: "block",
+            type: "table-cell",
+            nodes: [
+              {
+                object: "text",
+                leaves: [
+                  {
+                    text: "gggg"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+    ];
+
+    change.insertBlock({
+      type: "table",
+      nodes
+    });
+
+    this.onChange(change);
   };
 
   renderMarkButton = (type, icon) => {
@@ -182,6 +247,20 @@ class SlateEditor extends React.Component {
         return <li {...attributes}>{children}</li>;
       case "numbered-list":
         return <ol {...attributes}>{children}</ol>;
+      case "table":
+        return (
+          <table className="border-collapse">
+            <tbody {...attributes}>{children}</tbody>
+          </table>
+        );
+      case "table-row":
+        return <tr {...attributes}>{children}</tr>;
+      case "table-cell":
+        return (
+          <td className="border" {...attributes}>
+            {children}
+          </td>
+        );
       case "image":
         const src = node.data.get("src");
         const className = node.data.get("className");
@@ -205,7 +284,6 @@ class SlateEditor extends React.Component {
   };
 
   onChange = ({ value }) => {
-    console.log("on change");
     this.props.setValue(this.props.name, JSON.stringify(value.toJSON()));
     this.setState({ value });
   };
