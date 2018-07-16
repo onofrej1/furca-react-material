@@ -31,7 +31,7 @@ class FileList extends Component {
           {this.props.files.map(file => {
             let src = this.props.baseUrl + "/" + file.path;
             return (
-              <Grid item>
+              <Grid item key={file.path}>
                 <div className="thumbnail">
                   {file.type == "dir" && (
                     <img

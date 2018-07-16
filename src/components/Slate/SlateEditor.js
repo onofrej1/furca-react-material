@@ -17,6 +17,15 @@ import "./../../assets/css/thumbnails.css";
 
 const DEFAULT_NODE = "paragraph";
 
+/*var notepad = document.getElementById("notepad");
+notepad.addEventListener("contextmenu",function(event){
+    event.preventDefault();
+    var ctxMenu = document.getElementById("ctxMenu");
+    ctxMenu.style.display = "block";
+    ctxMenu.style.left = (event.pageX - 10)+"px";
+    ctxMenu.style.top = (event.pageY - 10)+"px";
+},false);*/
+
 /**
  * Source: https://github.com/ianstormtaylor/slate/blob/master/examples/rich-text/index.js
  */
@@ -33,10 +42,10 @@ class SlateEditor extends React.Component {
   }
 
   componentWillReceiveProps(props) {
-    this.setState({
+    /*this.setState({
       value: Value.fromJSON(this.parseValue(props.value)),
       modalIsOpen: false
-    });
+    });*/
   }
 
   parseValue(value) {
@@ -79,6 +88,15 @@ class SlateEditor extends React.Component {
     return value.blocks.some(node => node.type == type);
   };
 
+  menu = () => <div id="contextMenu">context menu</div>
+
+  contextMenu = function(e) {
+    e.preventDefault();
+    console.log(e.clientX);
+    
+    //addMenu.popup(e.clientX, e.clientY);
+  };
+
   render() {
     if (this.props.readOnly) {
       return (
@@ -114,6 +132,9 @@ class SlateEditor extends React.Component {
           <Button onMouseDown={this.addRow}>
             <Icon>image</Icon>
           </Button>
+          <Button onMouseDown={this.addCell}>
+            Add cell
+          </Button>
         </Toolbar>
         <Editor
           spellCheck={false}
@@ -123,6 +144,8 @@ class SlateEditor extends React.Component {
           renderNode={this.renderNode}
           renderMark={this.renderMark}
         />
+
+        <div id="ctxMenu">menuu</div>
 
         <FileList
           modalIsOpen={this.state.modalIsOpen}
@@ -138,58 +161,61 @@ class SlateEditor extends React.Component {
   };
 
   addRow = event => {
-    const value = this.state.value;
-    console.log(value.blocks.get(0));
+    const document = this.state.value.document;
+    let block = this.state.value.blocks.first();
+    let change = this.state.value.change();
+
+    let row = document.getClosestBlock(block.key);
+    let table = document.getClosest(row.key, (node) => node.type === 'table');
+    let rowIndex = table.nodes.findKey(node => node.key == row.key);
+
+    //let ch = change.collapseToEndOf(row);
+    //ch.insertText("mmm");
+    //ch.insertBlock(nodes[0]);
+
+    let cells = [];
+    for(var i = 0; i < row.nodes.size; i++) {
+        let cell = Block.create({
+          type: 'table-cell'
+        });
+        cells.push(cell);
+    }
+    let newRow = Block.create({
+      type: 'table-row',
+      nodes: cells
+    });
+
+    change.insertNodeByKey(table.key, rowIndex, newRow);
+    this.onChange(change);
+  }
+
+  addCell = event => {
+    const document = this.state.value.document;
+    let cell = this.state.value.blocks.first();
+    let change = this.state.value.change();
+
+    let row = document.getClosestBlock(cell.key);
+    let table = document.getClosest(row.key, (node) => node.type === 'table');
+    let cellIndex = row.nodes.findKey(node => node.key == cell.key);
+
+    for(let tableRow of table.nodes.values()) {
+        let cell = Block.create({
+          type: 'table-cell',
+        });
+        change.insertNodeByKey(tableRow.key, cellIndex+1, cell);
+    }
+
+    this.onChange(change);
   }
 
   addTable = event => {
     event.preventDefault();
     const value = this.state.value;
     const change = value.change();
-    console.log("add table");
-    //change.insertText("abc");
-    console.log(value.blocks.get(0));
-
-    let nodes = [
-      {
-        object: "block",
-        type: "table-row",
-        nodes: [
-          {
-            object: "block",
-            type: "table-cell",
-            nodes: [
-              {
-                object: "text",
-                leaves: [
-                  {
-                    text: "abcde"
-                  }
-                ]
-              }
-            ]
-          },
-          {
-            object: "block",
-            type: "table-cell",
-            nodes: [
-              {
-                object: "text",
-                leaves: [
-                  {
-                    text: "gggg"
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      },
-    ];
 
     change.insertBlock({
       type: "table",
-      nodes
+      nodes: []
     });
 
     this.onChange(change);
@@ -249,7 +275,7 @@ class SlateEditor extends React.Component {
         return <ol {...attributes}>{children}</ol>;
       case "table":
         return (
-          <table className="border-collapse">
+          <table className="border-collapse" onContextMenu={this.contextMenu} id="notepad">
             <tbody {...attributes}>{children}</tbody>
           </table>
         );
@@ -257,7 +283,7 @@ class SlateEditor extends React.Component {
         return <tr {...attributes}>{children}</tr>;
       case "table-cell":
         return (
-          <td className="border" {...attributes}>
+          <td className="border" style={{minWidth:'1em'}} {...attributes}>
             {children}
           </td>
         );
