@@ -1,0 +1,7 @@
+.my-table {
+  border-collapse: collapse !important;
+}
+
+#tableCtxMenu {
+  cursor: pointer;
+}
