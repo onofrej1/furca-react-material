@@ -5,9 +5,9 @@ import Button from "@material-ui/core/Button";
 import { Formik } from "formik";
 import { TextField } from "./TextField";
 import { ChecklistField } from "./ChecklistField";
-import { RichEditorField } from "./RichEditorField";
-import ReactQuill from "react-quill";
-import "react-quill/dist/quill.snow.css";
+//import { RichEditorField } from "./RichEditorField";
+//import ReactQuill from "react-quill";
+//import "react-quill/dist/quill.snow.css";
 import FormGroup from "@material-ui/core/FormGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
@@ -40,6 +40,9 @@ class Form extends Component {
     const Buttons = this.props.buttons || DefaultButtons;
 
     const onEditorChange = (content, fieldName, setFieldValue) => {
+      if(this.state.values[fieldName] == content) {
+        //return;
+      }
       setFieldValue(fieldName, content);
     };
 

@@ -12,11 +12,12 @@ import CardContent from "@material-ui/core/CardContent";
 import CardMedia from "@material-ui/core/CardMedia";
 import Typography from "@material-ui/core/Typography";
 import FileList from "./FileList";
-import { Block } from "slate";
+import { Block } from 'slate';
 import "./../../assets/css/thumbnails.css";
-import TablePlugin from "./TablePlugin";
+import TablePlugin from './TablePlugin';
 
 const DEFAULT_NODE = "paragraph";
+
 
 /**
  * Source: https://github.com/ianstormtaylor/slate/blob/master/examples/rich-text/index.js
@@ -31,13 +32,19 @@ class SlateEditor extends React.Component {
     };
 
     this.tablePlugin = TablePlugin(this.onChange);
-    this.plugins = [this.tablePlugin];
+    this.plugins = [
+      this.tablePlugin
+    ];
 
     this.chooseFile = this.chooseFile.bind(this);
   }
 
   onChange = ({ value }) => {
-    this.props.setValue(this.props.name, JSON.stringify(value.toJSON()));
+    if(JSON.stringify(this.state.value.toJSON()) == JSON.stringify(value.toJSON())) {
+      // console.log('same', JSON.stringify(value.toJSON()));
+      // return;
+    }
+    //this.props.setValue(this.props.name, JSON.stringify(value.toJSON()));
     this.setState({ value });
   };
 
@@ -88,22 +95,17 @@ class SlateEditor extends React.Component {
     return value.blocks.some(node => node.type == type);
   };
 
-  menu = () => <div id="contextMenu">context menu</div>;
+  menu = () => <div id="contextMenu">context menu</div>
 
-  renderFontStyle = () => {
-    return (
-      <select
-        className="border"
-        onChange={event => this.onClickBlock(event, event.target.value)}
-      >
-        <option value="--style--">--style--</option>
-        {this.renderFontStyleOption("heading-one", "heading 1")}
-        {this.renderFontStyleOption("heading-two", "heading 2")}
-        {this.renderFontStyleOption("heading-three", "heading 3")}
-        {this.renderFontStyleOption("heading-four", "heading 4")}
-      </select>
-    );
-  };
+renderFontStyle = () => {
+  return <select onChange={event => this.onClickBlock(event, event.target.value)}>
+    <option value="">Select style</option>
+      {this.renderFontStyleOption("heading-one", "looks_one")}
+      {this.renderFontStyleOption("heading-two", "looks_two")}
+      {this.renderFontStyleOption("heading-three", "looks_3")}
+      {this.renderFontStyleOption("heading-four", "looks_4")}
+  </select>
+}
 
   render() {
     const editorValue = this.state.value;
@@ -111,6 +113,7 @@ class SlateEditor extends React.Component {
     if (this.props.readOnly) {
       return (
         <Editor
+
           spellCheck={false}
           value={this.state.value}
           renderNode={this.renderNode}
@@ -186,13 +189,11 @@ class SlateEditor extends React.Component {
     );
   };
 
-  renderFontStyleOption = (type, label) => {
-    return (
-      <option value={type} selected={this.hasBlock(type)}>
-        {label}
-      </option>
-    );
-  };
+  renderFontStyleOption = (type, icon) => {
+    return <option value={type} selected={this.hasBlock(type)}>
+      <Icon>{icon}</Icon>
+    </option>
+  }
 
   renderBlockButton = (type, icon) => {
     let isActive = this.hasBlock(type);
@@ -236,7 +237,6 @@ class SlateEditor extends React.Component {
       case "image":
         const src = node.data.get("src");
         const className = node.data.get("className");
-
         return <img src={src} className={className} {...attributes} />;
     }
   };
