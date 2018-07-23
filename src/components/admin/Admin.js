@@ -36,6 +36,12 @@ class Admin extends Component {
   render() {
     const resources = Object.keys(Models);
 
+    const menuClasses = {
+      primary: 'menuItem',
+      secondary: 'menuItem',
+      root: 'menuItem'
+    }
+
     const ResourcesMenu = () => {
       return resources.map(resource => (
         <ListItem
@@ -43,10 +49,15 @@ class Admin extends Component {
           button
           onClick={() => this.setResource(resource)}
         >
-          <ListItemIcon>
-            <ListIcon style={{ fontSize: 35 }} />
+          <ListItemIcon classes={menuClasses}>
+            <ListIcon classes={menuClasses} style={{ fontSize: 35 }} />
           </ListItemIcon>
-          <ListItemText primary={resource} />
+          <ListItemText
+            classes={menuClasses}
+            style={{ color: "white !important" }}
+            primary={resource}
+            secondary={resource + " table"}
+          />
         </ListItem>
       ));
     };
@@ -56,7 +67,7 @@ class Admin extends Component {
         <Header />
         <Grid container>
           <Grid item xs={2}>
-            <div className="nav-wrapper" style={{backgroundColor:'z'}}>
+            <div className="nav-wrapper" style={{ backgroundColor: "#272c33" }}>
               <List component="nav">
                 <ListItem button>
                   <ListItemText primary="Select table" />
@@ -72,7 +83,7 @@ class Admin extends Component {
               </List>
             </div>
           </Grid>
-          <Grid item xs={10}>
+          <Grid item xs={10} style={{ backgroundColor: "#f5f5f5" }}>
             <Grid container justify="center">
               <Grid item xs={11}>
                 <br />
@@ -86,9 +97,12 @@ class Admin extends Component {
   }
 }
 
-export default connect(null, {
-  setActiveResourceName,
-  fetchResourceData,
-  fetchResourceFields,
-  setActiveRow
-})(withRouter(Admin));
+export default connect(
+  null,
+  {
+    setActiveResourceName,
+    fetchResourceData,
+    fetchResourceFields,
+    setActiveRow
+  }
+)(withRouter(Admin));

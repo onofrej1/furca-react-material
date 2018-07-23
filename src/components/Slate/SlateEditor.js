@@ -8,6 +8,7 @@ import Html from "slate-html-serializer";
 import { connect } from "react-redux";
 import Card from "@material-ui/core/Card";
 import CardActions from "@material-ui/core/CardActions";
+import Paper from "@material-ui/core/Paper";
 import CardContent from "@material-ui/core/CardContent";
 import CardMedia from "@material-ui/core/CardMedia";
 import Typography from "@material-ui/core/Typography";
@@ -88,8 +89,6 @@ class SlateEditor extends React.Component {
     return value.blocks.some(node => node.type == type);
   };
 
-  menu = () => <div id="contextMenu">context menu</div>;
-
   renderFontStyle = () => {
     return (
       <select
@@ -121,36 +120,43 @@ class SlateEditor extends React.Component {
 
     return (
       <div>
-        <Toolbar>
-          {this.renderFontStyle()}
-          {this.renderMarkButton("bold", "format_bold")}
-          {this.renderMarkButton("italic", "format_italic")}
-          {this.renderMarkButton("underlined", "format_underlined")}
-          {this.renderMarkButton("code", "code")}
-          {this.renderBlockButton("block-quote", "format_quote")}
-          {this.renderBlockButton("numbered-list", "format_list_numbered")}
-          {this.renderBlockButton("bulleted-list", "format_list_bulleted")}
-          <Button onMouseDown={this.onClickImage}>
-            <Icon>image</Icon>
-          </Button>
-          <Button onMouseDown={this.addTable}>
-            <Icon>table</Icon>
-          </Button>
-        </Toolbar>
-        <Editor
-          plugins={this.plugins}
-          spellCheck={false}
-          autoFocus
-          value={this.state.value}
-          onChange={this.onChange}
-          renderNode={this.renderNode}
-          renderMark={this.renderMark}
-        />
+        <Paper className="border-t-8" style={{borderTopColor: 'black'}}>
+          <Toolbar>
+            {this.renderFontStyle()}
+            {this.renderMarkButton("bold", "format_bold")}
+            {this.renderMarkButton("italic", "format_italic")}
+            {this.renderMarkButton("underlined", "format_underlined")}
+            {this.renderMarkButton("code", "code")}
+            {this.renderBlockButton("block-quote", "format_quote")}
+            {this.renderBlockButton("numbered-list", "format_list_numbered")}
+            {this.renderBlockButton("bulleted-list", "format_list_bulleted")}
+            <Button onMouseDown={this.onClickImage}>
+              <Icon>image</Icon>
+            </Button>
+            <Button onMouseDown={this.addTable}>
+              <Icon>table</Icon>
+            </Button>
+          </Toolbar>
+          <div className="p-3">
+            <Editor
+              plugins={this.plugins}
+              spellCheck={false}
+              autoFocus
+              value={this.state.value}
+              onChange={this.onChange}
+              renderNode={this.renderNode}
+              renderMark={this.renderMark}
+            />
 
-        <FileList
-          modalIsOpen={this.state.modalIsOpen}
-          chooseFile={this.chooseFile}
-        />
+            <FileList
+              modalIsOpen={this.state.modalIsOpen}
+              chooseFile={this.chooseFile}
+            />
+          </div>
+          <div className="border bt-2 h-3">
+
+          </div>
+        </Paper>
       </div>
     );
   }

@@ -5,16 +5,16 @@ import "./TablePlugin.css";
 export default function TablePlugin(onChange) {
   const tablePlugin = {
     addRowTop: function(editorState) {
-      tablePlugin.addRow("top", editorState);
+      plugin.addRow("top", editorState);
     },
     addRowBottom: function(editorState) {
-      tablePlugin.addRow("bottom", editorState);
+      plugin.addRow("bottom", editorState);
     },
     addColumnLeft: function(editorState) {
-      tablePlugin.addColumn("left", editorState);
+      plugin.addColumn("left", editorState);
     },
     addColumnRight: function(editorState) {
-      tablePlugin.addColumn("right", editorState);
+      plugin.addColumn("right", editorState);
     },
     deleteRow: function(value) {
       const document = value.document;
@@ -102,26 +102,26 @@ export default function TablePlugin(onChange) {
       const ctxMenuItems = [
         {
           menu: "Insert row top",
-          action: () => tablePlugin.addRowTop(editorValue) },
+          action: () => plugin.addRowTop(editorValue) },
         {
           menu: "Insert row bottom",
           action: () => tablePlugin.addRowBottom(editorValue)
         },
         {
           menu: "Insert column left",
-          action: () => tablePlugin.addColumnLeft(editorValue)
+          action: () => plugin.addColumnLeft(editorValue)
         },
         {
           menu: "Insert column right",
-          action: () => tablePlugin.addColumnRight(editorValue)
+          action: () => plugin.addColumnRight(editorValue)
         },
         {
           menu: "Delete row",
-          action: () => tablePlugin.deleteRow(editorValue)
+          action: () => plugin.deleteRow(editorValue)
         },
         {
           menu: "Delete column",
-          action: () => tablePlugin.deleteColumn(editorValue)
+          action: () => plugin.deleteColumn(editorValue)
         }
       ];
 
@@ -147,8 +147,8 @@ export default function TablePlugin(onChange) {
           return (
             <div>
               <table
-                onContextMenu={tablePlugin.onContextMenu}
-                className="border-collapse"
+                onContextMenu={plugin.onContextMenu}
+                className="border border-collapse"
                 id="notepad"
               >
                 <tbody {...attributes}>{children}</tbody>
@@ -167,7 +167,6 @@ export default function TablePlugin(onChange) {
       }
     },
     onContextMenu: function(e) {
-      console.log("context menu");
       e.preventDefault();
       var ctxMenu = document.getElementById("tableCtxMenu");
       ctxMenu.style.display = "block";
@@ -180,6 +179,8 @@ export default function TablePlugin(onChange) {
       };
     }
   };
+
+  const plugin = tablePlugin;
 
   return tablePlugin;
 }

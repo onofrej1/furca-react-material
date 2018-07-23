@@ -78,7 +78,7 @@ class Resource extends Component {
                 <h3><EditIcon /> {this.props.activeResourceName}</h3>
               </div>*/}
                 <CardHeader
-                  classes={{ root: "bg-secondary", title: "color-white" }}
+                  classes={{ root: "bg-primary", title: "color-white" }}
                   title="Add/Edit record"
                 />
                 <CardContent>

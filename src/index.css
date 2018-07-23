@@ -14,13 +14,22 @@ body {
   background-color: red;
 }
 
+.menuItem {
+  color: #798699 !important;
+}
+
+.appbar {
+  box-shadow: 0 6px 10px 0 rgba(0,0,0,0.14),0 1px 18px 0 rgba(0,0,0,0.12),0 3px 5px -1px rgba(0,0,0,0.3) !important;
+}
+
 .bg-primary {
+  /*background-color: #1e88e5;*/
   background-color: #2196f3;
   /*background-color: #3f51b5;*/
 }
 
 .bg-secondary {
-  background-color: #f50057;
+  background-color: gray;
   color: white !important;
 }
 

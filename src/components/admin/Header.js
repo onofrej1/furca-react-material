@@ -10,7 +10,7 @@ import Grid from "@material-ui/core/Grid";
 export const Header = () =>
 <Grid container>
   <Grid item xs={2}>
-    <AppBar position="static">
+    <AppBar className="appbar" position="static" style={{backgroundColor: '#533fd0'}}>
       <Toolbar>
         <IconButton color="inherit" aria-label="Menu">
           <MenuIcon />
@@ -19,7 +19,7 @@ export const Header = () =>
     </AppBar>
   </Grid>
   <Grid item xs={10}>
-    <AppBar position="static">
+    <AppBar className="appbar" position="static" style={{backgroundColor: '#533fd0'}}>
       <Toolbar>
         <Grid container alignItems="center">
           <Grid>

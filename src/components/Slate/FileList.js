@@ -4,6 +4,8 @@ import Grid from "@material-ui/core/Grid";
 import { fetchFiles } from "./../../actions";
 import { connect } from "react-redux";
 import Modal from "react-modal";
+import axios from "axios";
+import FileUpload from './../FileUpload';
 
 class FileList extends Component {
 
@@ -19,7 +21,7 @@ class FileList extends Component {
     return (
       <Modal
         isOpen={this.props.modalIsOpen}
-        onRequestClose={this.closeModal}
+        
         style={{
           content: { width: "80%", padding: 0 }
         }}
@@ -27,6 +29,9 @@ class FileList extends Component {
         <AppBar position="static" style={{ padding: 10 }}>
           <h4>Choose file</h4>
         </AppBar>
+        <p>
+        <FileUpload onUploadComplete={() => this.props.fetchFiles('obrazky')} />
+        </p>
         <Grid container spacing={16} className="p-4" alignItems="center">
           {this.props.files.map(file => {
             let src = this.props.baseUrl + "/" + file.path;

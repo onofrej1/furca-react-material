@@ -40,9 +40,6 @@ class Form extends Component {
     const Buttons = this.props.buttons || DefaultButtons;
 
     const onEditorChange = (content, fieldName, setFieldValue) => {
-      if(this.state.values[fieldName] == content) {
-        //return;
-      }
       setFieldValue(fieldName, content);
     };
 
@@ -60,20 +57,21 @@ class Form extends Component {
       this.setState({ values: values });
     };
 
-    var verifyCallback = async function (response) {
+    var verifyCallback = async function(response) {
       console.log(response);
 
-      axios.get('http://localhost:8000/verify-captcha?response='+response).then(
-        result => {
-          if(result.data.success) {
-            console.log('success');
-          } else {
-            console.log('not sucess');
-          }
-
-        },
-        error => console.log(error)
-      );
+      axios
+        .get("http://localhost:8000/verify-captcha?response=" + response)
+        .then(
+          result => {
+            if (result.data.success) {
+              console.log("success");
+            } else {
+              console.log("not sucess");
+            }
+          },
+          error => console.log(error)
+        );
     };
 
     return (
@@ -142,31 +140,30 @@ class Form extends Component {
                       );
                     }
 
-                    /*if (field.type === "editor") {
-                      Input = (
-                        <RichEditorField
-                          field={field}
-                          setFieldValue={setFieldValue}
-                        />
-                      );
-                    }*/
-
                     if (field.type === "rich-editor") {
                       Input = (
-                        <SlateEditor name={field.name} value={field.value} setValue={setFieldValue}  />
-                      )
-                      /*Input = (
-                        <ReactQuill
-                          value={field.value}
-                          onChange={content =>
-                            onEditorChange(content, field.name, setFieldValue)
-                          }
-                        />
-                      );*/
+                        <div>
+                          <div
+                            className="mb-2"
+                            style={{
+                              fontSize: "0.8rem",
+                              color: "rgba(0, 0, 0, 0.54)"
+                            }}
+                          >
+                            {field.label || field.name}
+                          </div>
+
+                          <SlateEditor
+                            name={field.name}
+                            value={field.value}
+                            setValue={setFieldValue}
+                          />
+                        </div>
+                      );
                     }
 
                     return (
-                      <div className={field.wrapper+" mb-8"} key={field.name}>
+                      <div className={field.wrapper + " mb-8"} key={field.name}>
                         {Input}
                         {touched[field.name] &&
                           errors[field.name] && <div>{errors[field.name]}</div>}

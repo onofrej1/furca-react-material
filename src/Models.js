@@ -19,7 +19,7 @@ const article = {
   form: [
     { name: "title", type: "text" },
     { name: "author", type: "text" },
-    { name: "content", type: "editor" },
+    { name: "content", type: "rich-editor" },
     {
       name: "tags",
       type: "checklist",

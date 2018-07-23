@@ -11,7 +11,7 @@ var _ = require("lodash");
 export const ChecklistField = ({ field, values, handleChange }) => (
   <FormControl component="fieldset">
     <FormLabel component="legend">
-      <span style={{ fontSize: "0.8rem" }}>{field.name}</span>
+      <span style={{ fontSize: "0.8rem" }}>{field.label || field.name}</span>
     </FormLabel>
     <FormGroup row>
       {field.options.map(option => {
